@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    App Groups show linked counts for Environments, Apps, and Services.
+    Groups with up to three environments show their names as detail links.
+    Related list panels support an appgroup query parameter and a clear-filter
+    link. App group details include related resource tables and empty states.

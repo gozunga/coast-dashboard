@@ -1,0 +1,5 @@
+hacking>=6.1.0,<6.2.0
+horizon>=25.0.0,<26.0.0
+Django>=4.2,<5.0
+keystoneauth1>=4.0.0
+reno>=3.1.0

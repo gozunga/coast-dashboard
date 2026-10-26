@@ -1,0 +1,32 @@
+{% extends 'project/coast_services/_settings_form.html' %}
+{% load i18n %}
+{% block form_attrs %}data-coast-public-access{% endblock %}
+{% block modal-body %}
+{{ block.super }}
+<script>
+(function () {
+  var root = document.querySelector('form[data-coast-public-access]');
+  if (!root || root.dataset.bound) { return; }
+  root.dataset.bound = '1';
+  var choice = root.querySelector('[name="allow_from"]');
+  var source = root.querySelector('[name="source"]');
+  var enabled = root.querySelector('[name="enabled"]');
+  var port = root.querySelector('[name="port"]');
+  if (!choice || !source || !enabled) { return; }
+  var warning = document.createElement('div');
+  warning.className = 'alert alert-warning';
+  warning.textContent = '{% trans "Anywhere allows connections from the entire internet. Restrict Allow from to trusted IPv4 ranges." %}';
+  choice.parentNode.appendChild(warning);
+  function update() {
+    warning.hidden = !(enabled.checked && choice.value === 'anywhere');
+    port.readOnly = !enabled.checked;
+    source.readOnly = choice.value !== 'specific';
+    if (choice.value === 'anywhere') { source.value = '0.0.0.0/0'; }
+    if (choice.value === 'stack') { source.value = source.dataset.stackSource || ''; }
+  }
+  choice.addEventListener('change', update);
+  enabled.addEventListener('change', update);
+  update();
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Image-based services have a Change image action and an image link on
+    Overview. The form keeps the current image and tag, displays API validation
+    faults, and offers Save or Save and redeploy. Redeploy opens live Logs.
+    Requires Coast API microversion 1.14. Settings, variables, storage and
+    domains are kept.

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block breadcrumb_nav %}
+{% if is_template %}
+  {% include "bootstrap/breadcrumb.html" with breadcrumb=service_breadcrumb %}
+{% else %}
+  {{ block.super }}
+{% endif %}
+{% endblock %}
+{% block main %}
+<p><a href="{{ detail_url }}">{% trans "Back to service" %}</a></p>
+{% include "project/coast_services/_log_box.html" %}
+{% endblock %}

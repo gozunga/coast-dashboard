@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The Apps and Services tables show a Stack column linked to the stack,
+    and app and service detail pages show a linked Stack row, so items with
+    the same name on different stacks can be told apart.

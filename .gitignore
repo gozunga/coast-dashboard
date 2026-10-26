@@ -1,0 +1,21 @@
+*.pyc
+__pycache__/
+*.egg-info/
+.tox/
+build/
+dist/
+AUTHORS
+ChangeLog
+.stestr/
+releasenotes/build/
+
+# Agent scratch files; never commit these (checked in CI).
+.ai/
+.claude/
+.cursor/
+AGENTS.local.md
+*.orig
+*.rej
+releasenotes/notes/reno.cache
+
+node_modules/

@@ -1,0 +1,41 @@
+{% load i18n static %}
+<div class="coast-console"
+     data-console-url="{{ console_url }}"
+     data-csrf="{{ csrf_value }}"
+     data-xterm="{% static 'coast_dashboard/vendor/xterm/xterm.js' %}"
+     data-fit="{% static 'coast_dashboard/vendor/xterm/addon-fit.js' %}"
+     data-css="{% static 'coast_dashboard/vendor/xterm/xterm.css' %}"
+     data-logic="{% static 'coast_dashboard/console.js' %}">
+  <p class="help-block">{% trans "Coast records when this session opens and when it closes. Coast does not record keystrokes or screen text. The session closes after 15 minutes with no input." %}</p>
+  <p>
+    <button type="button" class="btn btn-primary btn-sm coast-console-connect">{% trans "Connect" %}</button>
+    <button type="button" class="btn btn-default btn-sm coast-console-reconnect" hidden>{% trans "Reconnect" %}</button>
+  </p>
+  <p class="coast-console-status" role="status"></p>
+  <div class="coast-console-host" hidden></div>
+</div>
+<style>
+.coast-console-host { height: 480px; width: 100%; background: #111; }
+.coast-console-host .xterm { height: 100%; }
+.coast-console [hidden] { display: none !important; }
+.coast-console-status[data-state="connected"] { color: #3c763d; font-weight: bold; }
+.coast-console-status[data-state="ended"],
+.coast-console-status[data-state="error"] { color: #a94442; font-weight: bold; }
+.coast-console-host.coast-console-ended { opacity: 0.55; }
+</style>
+<script>
+(function () {
+  var node = document.querySelector('.coast-console:not([data-bound])');
+  if (!node) { return; }
+  function start() { window.coastConsole.mountAll(); }
+  if (window.coastConsole) { start(); return; }
+  var script = document.createElement('script');
+  script.src = node.getAttribute('data-logic');
+  script.onload = start;
+  script.onerror = function () {
+    var status = node.querySelector('.coast-console-status');
+    if (status) { status.textContent = 'The console cannot start.'; }
+  };
+  document.head.appendChild(script);
+})();
+</script>

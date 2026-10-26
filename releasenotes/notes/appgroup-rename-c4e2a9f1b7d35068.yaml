@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    App Groups (slug ``coast.appgroups``) contain environments, apps and
+    services. Apps (``coast.apps``) lists ``kind=app``; Services
+    (``coast.services``) lists ``kind=service`` template workloads.

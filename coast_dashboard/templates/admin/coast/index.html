@@ -1,0 +1,24 @@
+{% extends 'horizon/common/_data_table_view.html' %}
+{% load i18n %}
+{% block main %}
+<p>{% trans "Inspect stacks and their cloud resources across all projects. This panel is read-only." %}</p>
+<form method="get" class="form-inline">
+  <label for="coast-project">{% trans "Project" %}</label>
+  <select id="coast-project" name="project" class="form-control">
+    <option value="">{% trans "All projects" %}</option>
+    {% for id, name in projects %}<option value="{{ id }}"{% if request.GET.project == id %} selected{% endif %}>{{ name }}</option>{% endfor %}
+  </select>
+  <label for="coast-status">{% trans "Status" %}</label>
+  <select id="coast-status" name="status" class="form-control">
+    <option value="">{% trans "All statuses" %}</option>
+    {% for status in statuses %}<option{% if request.GET.status == status %} selected{% endif %}>{{ status }}</option>{% endfor %}
+  </select>
+  <label for="stacks-host">{% trans "Host" %}</label>
+  <select id="stacks-host" name="host" class="form-control"><option value="">{% trans "All hosts" %}</option>{% for host in hosts %}<option{% if request.GET.host == host %} selected{% endif %}>{{ host }}</option>{% endfor %}</select>
+  <label for="stacks-search">{% trans "Search" %}</label>
+  <input id="stacks-search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="{% trans 'Stack, project, server, host, or IP' %}">
+  <button class="btn btn-default" type="submit">{% trans "Filter" %}</button>
+  <a href="{% url 'horizon:admin:stacks:index' %}" class="btn btn-link">{% trans "Clear filters" %}</a>
+</form>
+{{ block.super }}
+{% endblock %}

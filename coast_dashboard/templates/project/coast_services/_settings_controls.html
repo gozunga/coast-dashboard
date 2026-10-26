@@ -1,0 +1,14 @@
+{% load i18n %}
+{% if pending %}
+<div class="alert alert-warning coast-pending">
+  <strong>{% trans "Changes saved, redeploy to apply." %}</strong>
+  {% if can_redeploy %}
+  <form method="post" action="{{ index_url }}" style="display:inline;margin-left:12px;">{% csrf_token %}
+    <input type="hidden" name="action" value="{{ deploy_action }}">
+    <button type="submit" class="btn btn-primary btn-sm">{% trans "Redeploy" %}</button>
+  </form>
+  {% else %}
+  <span class="help-inline">{% trans "Redeploy is available once the current operation finishes." %}</span>
+  {% endif %}
+</div>
+{% endif %}

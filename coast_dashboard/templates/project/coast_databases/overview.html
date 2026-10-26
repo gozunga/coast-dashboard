@@ -1,0 +1,66 @@
+{% load i18n %}
+{% if item.restart_required %}<div class="alert alert-warning">{% trans "Restart needed to apply resource limits." %}</div>{% endif %}
+{% if item.public.enabled %}
+<p>{% trans "Public endpoint" %}: {{ item.public.host }}:{{ item.public.port }}</p>
+<p>{% trans "Private endpoint" %}: {{ item.public.private_host }}:{{ item.public.port }}</p>
+<p>{% trans "Public URL" %}: <code>{{ item.public_url }}</code></p>
+{% endif %}
+{% if item.stack_id %}<a href="{% url 'horizon:project:coast.stacks:detail' item.stack_id %}?tab=stack_details__firewall">{% trans "Stack firewall" %}</a>{% endif %}
+<dl class="dl-horizontal">
+<dt>{% trans "Status" %}</dt><dd>{{ item.status }}{% if item.status == 'ERROR' and item.fault %}<div class="alert alert-danger" role="alert">{% trans "Reason:" %} {{ item.fault }}</div>{% endif %}</dd>
+<dt>{% trans "Engine" %}</dt><dd>{{ item.engine }} {{ item.version }}</dd>
+<dt>{% trans "Server" %}</dt><dd>{{ item.server_id }}</dd>
+<dt>{% trans "CPU limit" %}</dt><dd>{% if item.cpu_limit != None %}{{ item.cpu_limit }}{% else %}{% trans "No limit" %}{% endif %}</dd>
+<dt>{% trans "Memory limit (MB)" %}</dt><dd>{% if item.memory_limit_mb != None %}{{ item.memory_limit_mb }}{% else %}{% trans "No limit" %}{% endif %}</dd>
+</dl>
+<div class="panel panel-default coast-db-connection"><div class="panel-heading">{% trans "Connection" %}</div><div class="panel-body">
+{% for label, value in connection %}<p>{{ label }}: <code>{% if value != None and value != "" %}{{ value }}{% else %}{% trans "Unavailable" %}{% endif %}</code> <button type="button" class="btn btn-default db-copy">{% trans "Copy" %}</button></p>{% endfor %}
+{% if can_reveal %}<button type="button" class="btn btn-default db-reveal" data-url="{% url 'horizon:project:coast.databases:credentials' item.id %}">{% trans "Show password" %}</button>{% endif %}
+<div class="db-copy-status" role="status"></div>
+<div class="db-credentials" aria-live="polite"></div>
+</div></div>
+<script>
+(function ($) {
+$(document).off('click.coastDbCopy', '.db-copy').on('click.coastDbCopy', '.db-copy', function () {
+var button = $(this);
+var status = button.closest('.coast-db-connection').find('.db-copy-status').empty();
+var value = button.siblings('code').text();
+function failed() {
+status.text('{% trans "Copy failed, select the text manually" %}');
+}
+if (navigator.clipboard && navigator.clipboard.writeText) {
+navigator.clipboard.writeText(value).catch(failed);
+} else {
+var textarea = $('<textarea>').val(value).attr('aria-hidden', 'true').css({position: 'fixed', opacity: 0}).appendTo(document.body);
+try {
+textarea[0].select();
+if (!document.execCommand('copy')) { failed(); }
+} catch (error) { failed(); }
+finally { textarea.remove(); button.trigger('focus'); }
+}
+});
+$(document).off('click.coastDbReveal', '.db-reveal').on('click.coastDbReveal', '.db-reveal', function () {
+var button = $(this); button.prop('disabled', true);
+fetch(button.data('url'), {cache: 'no-store', credentials: 'same-origin'}).then(function (r) {
+if (!r.ok) { throw new Error(); } return r.json();
+}).then(function (data) {
+var output = button.siblings('.db-credentials').empty();
+var labels = {
+username: '{% trans "Username" %}',
+password: '{% trans "Password" %}',
+root_password: '{% trans "Root password" %}',
+database: '{% trans "Initial database" %}',
+internal_url: '{% trans "Internal URL" %}',
+public_url: '{% trans "Public URL" %}'
+};
+Object.keys(labels).forEach(function (key) {
+var value = data.credentials[key]; if (value == null) { return; }
+var p = $('<p>').text(labels[key] + ': ');
+$('<code>').text(value).appendTo(p);
+$('<button type="button" class="btn btn-default db-copy">').text('{% trans "Copy" %}').appendTo(p);
+output.append(p);
+});
+}).catch(function () { button.prop('disabled', false); button.siblings('.db-credentials').text('{% trans "Unable to retrieve credentials." %}'); });
+});
+})(jQuery);
+</script>

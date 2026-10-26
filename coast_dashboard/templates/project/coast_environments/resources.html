@@ -1,0 +1,6 @@
+{% load i18n %}
+{% if load_error %}
+<p>{% trans "Unable to retrieve apps and services." %}</p>
+{% else %}
+{{ table.render }}
+{% endif %}

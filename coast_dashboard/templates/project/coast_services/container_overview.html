@@ -1,0 +1,11 @@
+{% load i18n %}
+<h3>{% trans "Container overview" %}</h3>
+<p class="help-block">{% trans "Current container state and configured resource limits. Unlimited means no container limit is set." %}</p>
+<dl class="dl-horizontal">
+{% include 'project/coast_common/_resource_id.html' with resource_id=item.id %}
+<dt>{% trans "Image" %}</dt><dd>{{ item.image }}</dd>
+<dt>{% trans "Status" %}</dt><dd>{{ item.state }}{% if item.health %} ({{ item.health }}){% endif %}</dd>
+<dt>{% trans "Restarts" %}</dt><dd>{{ item.restart_count|default_if_none:_("Unknown") }}</dd>
+<dt>{% trans "CPU limit (cores)" %}</dt><dd>{{ item.limits.cpu|default_if_none:_("Unlimited") }}</dd>
+<dt>{% trans "Memory limit (bytes)" %}</dt><dd>{{ item.limits.memory_bytes|default_if_none:_("Unlimited") }}</dd>
+</dl>

@@ -1,0 +1,8 @@
+fixes:
+  - |
+    The Services template catalog fetches one catalog per engine version
+    and shows each template once. Name and category search and 50-row pages
+    reduce the size of the page. Deploy actions identify the template.
+    Service rows use status and deployment IDs from the list API, without
+    per-service deployment calls or row polling. No Horizon process cache is
+    used.

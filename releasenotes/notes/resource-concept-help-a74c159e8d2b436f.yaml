@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Create App Group, Create Environment, Create App, and Create Service forms
+    have brief Description text explaining the resource and its placement.
+    Stacks, App Groups, Environments, Apps, and Services list pages start
+    with a short introduction to the resource and how it relates to the others.

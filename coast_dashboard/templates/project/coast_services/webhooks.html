@@ -1,0 +1,22 @@
+{% load i18n %}
+<div class="coast-webhooks">
+{% if hooks_error %}
+  <div class="alert alert-info">{{ hooks_error }}</div>
+{% elif not enabled %}
+  <div class="alert alert-info">{% trans "Webhooks are not enabled on this cloud." %}</div>
+{% else %}
+  <p>{% blocktrans %}Call the Coast deploy URL with POST to deploy this app, or add the URL for your Git host as a push webhook (content type application/json). Use the token at the end of the URL as the webhook secret so Coast can verify the signature. Pushes to other branches are ignored, and a webhook that arrives while a deployment runs gets 409.{% endblocktrans %}</p>
+  <table class="table table-condensed">
+    <tbody>
+    {% for label, url in urls %}
+      <tr><th style="width:180px;">{{ label }}</th>
+        <td><span style="font-family:monospace;overflow-wrap:anywhere;">{{ url }}</span> {% include "project/coast_common/_copy_button.html" with copy_value=url %}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <form method="post" action="{{ regenerate_url }}" onsubmit="return confirm('{% trans "Regenerate the webhook token? Existing webhook URLs stop working." %}');">
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_value }}">
+    <button type="submit" class="btn btn-default btn-sm">{% trans "Regenerate token" %}</button>
+  </form>
+{% endif %}
+</div>

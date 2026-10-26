@@ -1,0 +1,27 @@
+{% load i18n %}
+<h3>{% trans "Stack servers and Nova instances" %}</h3>
+<p>{% trans "Each stack server maps to a Nova instance. An instance can be not found after deletion or during replacement." %}</p>
+{{ servers_table.render }}
+{% for server in servers %}
+<div class="panel panel-default">
+  <div class="panel-heading"><h4>{{ server.label }}</h4></div>
+  <div class="panel-body"><dl class="dl-horizontal">
+    <dt>{% trans "Hostname" %}</dt><dd>{{ server.hostname|default:"-" }}</dd>
+    <dt>{% trans "Role" %}</dt><dd>{{ server.role_label }}</dd>
+    <dt>{% trans "Server ID" %}</dt><dd>{{ server.id|default:"-" }}</dd>
+    <dt>{% trans "Nova instance" %}</dt><dd>{{ server.nova }}</dd>
+    <dt>{% trans "Nova instance ID" %}</dt><dd>{{ server.compute_link }}</dd>
+    <dt>{% trans "Hypervisor host" %}</dt><dd>{{ server.host }}</dd>
+    <dt>{% trans "Image" %}</dt><dd>{{ server.image_name }} ({{ server.image_id|default:"-" }})</dd>
+    <dt>{% trans "Flavor" %}</dt><dd>{{ server.flavor_name }}</dd>
+    <dt>{% trans "Floating IPs" %}</dt><dd>{{ server.floating_ips }}</dd>
+    <dt>{% trans "Management IP" %}</dt><dd>{{ server.mgmt_ip|default:"-" }}</dd>
+    <dt>{% trans "Customer-network IP" %}</dt><dd>{{ server.private_ip|default:"-" }}</dd>
+    <dt>{% trans "Stack server status" %}</dt><dd>{{ server.status|default:"-" }}</dd>
+    <dt>{% trans "Nova status" %}</dt><dd>{{ server.nova_status }}</dd>
+    <dt>{% trans "Attached volumes" %}</dt><dd>
+    {% for volume in server.volumes %}<p>{{ volume.name|default:"-" }} — {{ volume.cinder_link }} — {{ volume.size_gb|default:"-" }} GiB</p>{% empty %}-{% endfor %}
+    </dd>
+  </dl></div>
+</div>
+{% empty %}<p>{% trans "No servers." %}</p>{% endfor %}

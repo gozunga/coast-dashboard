@@ -1,0 +1,11 @@
+{% load i18n %}
+  <form id="template-search-form" method="get" action="{{ catalog_url }}" class="form-inline">
+    {% for name, value in template_search_params %}
+      <input type="hidden" name="{{ name }}" value="{{ value }}">
+    {% endfor %}
+    <div class="form-group">
+      <label for="template-search">{% trans "Search by name or description" %}</label>
+      <input id="template-search" class="form-control" type="search" name="q" value="{{ template_search }}">
+    </div>
+    <button class="btn btn-default" type="submit">{% trans "Search" %}</button>
+  </form>

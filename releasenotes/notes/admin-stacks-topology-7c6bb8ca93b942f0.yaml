@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    The read-only admin panel is App Hosting > Stacks at
+    ``/admin/stacks/``. It shows linked projects, worker/build counts,
+    App engine server versions, health summaries, expandable server rows,
+    host filters and stack/instance/IP search. Details include Volumes and
+    a cloud topology with missing-resource markers. Cloud resource names
+    and IDs are preserved.

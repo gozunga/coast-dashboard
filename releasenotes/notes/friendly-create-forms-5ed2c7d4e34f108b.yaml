@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Create forms explain stacks, app groups, environments, apps, services,
+    domains and environment variables, with field guidance. Stack creation
+    loads App engine server, worker and optional build server flavors from
+    Nova,
+    sorted by RAM and name. Choices show CPU, RAM and disk capacity and send
+    flavor names to Coast. The optional build server flavor is shown only
+    when a build server is selected. If flavors cannot be loaded, the form
+    shows a message and leaves the flavor choices empty.

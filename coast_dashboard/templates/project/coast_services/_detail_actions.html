@@ -1,0 +1,22 @@
+{% load i18n %}
+{% if deploy %}
+  {% include "horizon/common/_data_table_action.html" with action=deploy is_single=1 is_small=1 %}
+{% endif %}
+{% if edit %}
+  {% include "horizon/common/_data_table_action.html" with action=edit is_single=1 is_small=1 %}
+{% endif %}
+{% if cancel %}
+  {% include "horizon/common/_data_table_action.html" with action=cancel row_id=deployment_id is_single=1 is_small=1 %}
+{% endif %}
+{% if row_actions %}
+<div class="btn-group">
+  <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {% trans "Actions" %} <span class="fa fa-caret-down"></span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-right row_actions">
+    {% for action in row_actions %}
+    <li>{% include "horizon/common/_data_table_action.html" with is_small=0 %}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

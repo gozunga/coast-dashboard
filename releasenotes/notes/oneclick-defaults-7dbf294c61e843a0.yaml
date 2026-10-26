@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The one-click Create Service form defaults to a name based on the selected
+    template. Existing names in the selected app group use the next available
+    numeric suffix. Template and app group changes update the suggested name
+    in the browser while preserving custom names. Compatible app group,
+    environment, and worker choices default only when there is one
+    compatible choice. All fields remain
+    editable, and initial defaults also work without JavaScript.

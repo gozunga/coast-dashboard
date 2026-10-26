@@ -1,0 +1,16 @@
+---
+features:
+  - |
+    Apps can now use a private Git repository with a generated or uploaded
+    deploy key, a pasted or uploaded Dockerfile, or Docker Compose. Public
+    deploy keys can be copied and replaced from the app details. Dockerfiles
+    and Compose configuration can be saved without deploying.
+    Private key upload fields appear only when uploading a deploy key.
+    Generated keys are ed25519 key pairs. Only the public key is returned;
+    private keys stay in Barbican and never appear in API responses, the CLI
+    or dashboard. Creation with a generated key does not deploy: add the public
+    key to the Git host, then deploy. After rotation, authorize the replacement
+    public key at the Git host before deploying.
+    On redeploy, an unchanged Dockerfile is skipped and its image reused.
+    A changed Dockerfile is refused: "This app can't use a changed Dockerfile.
+    Create a new app from the new Dockerfile, or deploy from a Git repository."

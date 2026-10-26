@@ -1,0 +1,7 @@
+---
+prelude: >
+  Version 0.1.0 is the first release of coast-dashboard, a Horizon plugin
+  for Coast application hosting on OpenStack. It adds App Hosting panels
+  to manage stacks, app groups, environments, applications and template
+  services through the public Coast API, with resource details, deployment
+  status, domains, environment settings and logs.

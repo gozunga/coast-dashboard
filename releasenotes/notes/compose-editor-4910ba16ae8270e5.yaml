@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Compose services have a Compose tab for project members and admins.
+    Users can save the full YAML document or save and redeploy, then follow
+    live runtime logs. API validation errors keep the submitted edits in the
+    editor. This feature requires Coast API microversion 1.12. Runtime logs
+    refresh every three seconds by default.

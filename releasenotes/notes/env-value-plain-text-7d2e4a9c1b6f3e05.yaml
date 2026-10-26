@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    The environment variable form for apps and services shows the value as
+    plain text and masks it only while Secret is checked. Saved secret
+    values stay hidden and write-only.

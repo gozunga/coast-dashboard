@@ -1,0 +1,38 @@
+<script>
+(function ($) {
+  'use strict';
+  var formSelector = 'form[data-coast-oneclick], form[data-coast-name-defaults]';
+  var nameInputs = 'form[data-coast-oneclick] [name="name"], ' +
+    'form[data-coast-name-defaults] [name="name"]';
+  function suggest(form) {
+    var name = form.elements.namedItem('name');
+    if (name.dataset.userEdited === 'true') { return; }
+    var data = JSON.parse(form.querySelector('script[type="application/json"]').textContent);
+    var template = form.elements.namedItem(data.selector || 'template_id').value;
+    var group = form.elements.namedItem('appgroup_id').value;
+    var base = data.bases[template];
+    if (!base) { name.value = ''; return; }
+    var used = data.names.filter(function (item) {
+      return !group || item.appgroup_id === group;
+    }).map(function (item) { return item.name; });
+    var candidate = base;
+    var number = 2;
+    while (used.indexOf(candidate) !== -1) {
+      var suffix = '-' + number++;
+      candidate = base.slice(0, 63 - suffix.length).replace(/-+$/, '') + suffix;
+    }
+    name.value = candidate;
+  }
+  function init() { $(formSelector).each(function () { suggest(this); }); }
+  $(document).off('input.coastName', nameInputs)
+    .on('input.coastName', nameInputs, function () {
+      this.dataset.userEdited = 'true';
+    });
+  var choices = 'form[data-coast-oneclick] select, ' +
+    'form[data-coast-name-defaults] select';
+  $(document).off('change.coastName', choices)
+    .on('change.coastName', choices, function () { suggest(this.form); });
+  $(document).off('shown.bs.modal.coastName').on('shown.bs.modal.coastName', init);
+  $(init);
+}(jQuery));
+</script>

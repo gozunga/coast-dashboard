@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Added ``docker/horizon/Dockerfile`` and ``tools/build-horizon-image.sh``
+    to build a Kolla Horizon image with python-coastclient and
+    coast-dashboard installed and the Coast panels enabled. Kolla
+    reconfigures and deploys of Horizon keep the Coast dashboard.

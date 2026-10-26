@@ -1,0 +1,6 @@
+{% extends 'project/coast_services/_create.html' %}
+{% load i18n %}
+{% block modal-body-right %}
+{{ block.super }}
+<p>{% with name=form.service.name %}{% blocktrans %}To overwrite, type <strong>{{ name }}</strong> below.{% endblocktrans %}{% endwith %}</p>
+{% endblock %}

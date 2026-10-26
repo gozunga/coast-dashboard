@@ -1,0 +1,16 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block modal-body %}
+  <div class="row">
+    <div class="col-sm-6">
+      <fieldset>
+      {% include "horizon/common/_form_fields.html" %}
+      </fieldset>
+      {% if form.dns_preview and form.dns_enabled %}{% include 'project/coast_stacks/_dns_preview.html' %}{% endif %}
+    </div>
+    <div class="col-sm-6">
+      <h3>{% trans "Description" %}</h3>
+      <p>{{ form.help_text }}</p>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Environment variable forms disable autofill. Values are plain text while
+    Secret is clear and masked while Secret is checked. Saved secret values
+    are write-only; leaving an existing secret blank preserves its value.

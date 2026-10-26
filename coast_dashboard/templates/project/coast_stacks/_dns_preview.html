@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="coast-dd-preview-box">
+  <p class="coast-dd-zone"{% if not form.dns_preview_value %} hidden{% endif %}>{% trans "Default domain for new apps:" %} <strong class="coast-dd-preview">{{ form.dns_preview_value }}</strong></p>
+  <p class="coast-dd-none"{% if form.dns_preview_value %} hidden{% endif %}>{% trans "New apps use sslip.io addresses." %}</p>
+</div>
+<script>
+(function ($) {
+  function init() {
+    document.querySelectorAll('.coast-dd-preview-box').forEach(function (box) {
+      if (box.dataset.initialized) { return; }
+      var form = box.closest('form');
+      if (!form) { return; }
+      box.dataset.initialized = 'true';
+      var zone = form.querySelector('[name="zone_id"]');
+      var host = form.querySelector('[name="host"]');
+      function normalize(value) { return value.toLowerCase().trim().replace(/\.+$/, ''); }
+      function update() {
+        var suffix = zone && zone.value ? normalize(zone.options[zone.selectedIndex].text) : '';
+        box.querySelector('.coast-dd-zone').hidden = !suffix;
+        box.querySelector('.coast-dd-none').hidden = !!suffix;
+        if (!suffix) { return; }
+        var label = host ? normalize(host.value) : '';
+        if (label === suffix) { label = ''; }
+        else if (label.endsWith('.' + suffix)) { label = label.slice(0, -suffix.length - 1); }
+        box.querySelector('.coast-dd-preview').textContent = label ? label + '.' + suffix : suffix;
+      }
+      form.addEventListener('input', update);
+      form.addEventListener('change', update);
+      update();
+    });
+  }
+  if (window.horizon && horizon.modals && !window.coastDefaultDomainInit) {
+    horizon.modals.addModalInitFunction(init);
+    window.coastDefaultDomainInit = true;
+  }
+  $(init);
+})(jQuery);
+</script>

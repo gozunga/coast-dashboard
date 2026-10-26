@@ -1,0 +1,6 @@
+{% extends 'horizon/common/_data_table_view.html' %}
+{% load i18n %}
+{% block main %}
+<p>{% trans "A stack is the set of servers for your apps and services: an app engine server, an optional build server, and workers." %}</p>
+{{ block.super }}
+{% endblock %}

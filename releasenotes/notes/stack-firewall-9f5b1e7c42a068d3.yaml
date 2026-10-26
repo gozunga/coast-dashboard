@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    Project stack pages include a Firewall tab for listing worker ingress
+    rules and adding or deleting custom rules. Required rules are marked
+    "Managed by Coast" and cannot be deleted. The Overview shows open ports
+    and links to edit the rules. Firewall management requires Coast API
+    microversion 1.25 or later; the tab and overview link are hidden on older
+    APIs.
+  - |
+    Admin stack overviews display Worker security group and Management
+    security group names with copyable IDs.
+    The worker security group rules list identifies customer-added rules.

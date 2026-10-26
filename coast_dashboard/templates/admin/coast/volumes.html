@@ -1,0 +1,31 @@
+{% load i18n %}
+<style>
+.coast-volume-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr)); gap: 12px; }
+.coast-volume-card { min-width: 0; margin-bottom: 0; overflow-wrap: anywhere; }
+.coast-volume-card .panel-heading, .coast-volume-card .panel-body { padding: 10px; }
+.coast-volume-card dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin-bottom: 8px; }
+.coast-volume-card dd { margin: 0; }
+.coast-volume-badge { display: inline-block; background: #eee; border-radius: 3px; padding: 2px 5px; }
+.coast-volume-identity { display: block; font-family: monospace; font-size: 12px; overflow-wrap: anywhere; }
+</style>
+<h3>{% trans "Stack volumes" %}</h3>
+<p>{% trans "Volumes recorded for this stack, including unattached volumes." %}</p>
+{% for group in volume_groups %}
+<h4>{{ group.link }}</h4>
+<div class="coast-volume-grid">
+{% for volume in group.volumes %}
+<div class="panel panel-default coast-volume-card">
+  <div class="panel-heading" title="{{ volume.identity }}">{{ volume.cloud_link }}</div>
+  <div class="panel-body">
+    <dl>
+      <dt>{% trans "Size" %}</dt><dd>{{ volume.size_gb|default_if_none:"-" }} GiB</dd>
+      <dt>{% trans "Status" %}</dt><dd><span class="coast-volume-badge" title="{{ volume.status }}">{{ volume.badge }}</span></dd>
+      {% if volume.device %}<dt>{% trans "Device" %}</dt><dd>{{ volume.device }}</dd>{% endif %}
+      <dt>{% trans "Mount" %}</dt><dd>{{ volume.mount_path|default:"-" }}</dd>
+    </dl>
+    <small class="text-muted coast-volume-identity" title="{{ volume.identity }}">{{ volume.copyable_name|default:"-" }}</small>
+  </div>
+</div>
+{% endfor %}
+</div>
+{% empty %}<p>{% trans "No volumes." %}</p>{% endfor %}

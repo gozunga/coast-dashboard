@@ -1,0 +1,4 @@
+{% load i18n %}
+{% if filtered_appgroup %}
+<p class="help-block">{% blocktrans with group=filtered_appgroup %}Filtered by app group {{ group }}{% endblocktrans %} - <a href="{{ clear_appgroup_url }}">{% trans "clear" %}</a></p>
+{% endif %}

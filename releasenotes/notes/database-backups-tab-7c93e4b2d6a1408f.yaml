@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    Database services have a Backups tab when the Coast API supports backup
+    control (microversion 1.20). The tab includes daily schedules, daily and
+    weekly retention, explicit database engine and container selection, manual
+    backups, history, downloads, deletion, and restore into a new copy or over
+    the existing database. Overwrite requires the service name and explains
+    the database stop and safety backup. Older APIs hide the tab.
+    Backups need a Swift-compatible object-storage endpoint in the cloud;
+    backups are not verified end to end in 0.1.0; full verification is tracked
+    for 0.1.1 (gozunga/coast#124).

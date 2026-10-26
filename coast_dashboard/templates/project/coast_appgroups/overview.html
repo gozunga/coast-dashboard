@@ -1,0 +1,15 @@
+{% load i18n coast_status %}
+<div class="detail">
+  <h4>{% trans "Overview" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    {% include "project/coast_common/_resource_id.html" with resource_id=item.id %}
+    {% if item.stack_id %}
+    <dt>{% trans "Stack" %}</dt><dd><a href="{% url 'horizon:project:coast.stacks:detail' item.stack_id %}">{{ stack_name }}</a></dd>
+    {% endif %}
+    {% for key, value in fields %}
+    <dt>{{ key }}</dt>
+    <dd>{% if key == "status" %}{{ item|status_badge }}{% else %}{{ value|default:_("-") }}{% endif %}</dd>
+    {% endfor %}
+  </dl>
+</div>

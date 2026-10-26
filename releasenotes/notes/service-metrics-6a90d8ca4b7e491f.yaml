@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Service and app detail pages include a Metrics tab when Coast
+    advertises API microversion 1.21 or later. Stacked CPU and memory charts,
+    per-container memory limit lines, and current values refresh every
+    30 seconds while the tab is visible. Six time ranges cover 15 minutes
+    through 30 days.

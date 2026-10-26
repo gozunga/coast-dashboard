@@ -1,0 +1,14 @@
+{% load i18n %}
+<h3>{% trans "Server history" %}</h3>
+<p>{% trans "Server creation, deletion, replacement, and failover events. Compute ID identifies the Nova instance for create and delete events. Old and new compute IDs identify replacement instances when the API supplies them. Older events can have no compute IDs." %}</p>
+{% for event in events %}
+<div class="panel panel-default"><div class="panel-heading">{{ event.action|default:"-" }} — {{ event.outcome|default:"-" }}</div>
+<div class="panel-body"><dl class="dl-horizontal">
+<dt>{% trans "Time" %}</dt><dd>{{ event.time|default:"-" }}</dd>
+<dt>{% trans "Server ID" %}</dt><dd>{{ event.resource_id|default:"-" }}</dd>
+<dt>{% trans "Compute ID" %}</dt><dd>{{ event.compute_id|default:"-" }}</dd>
+<dt>{% trans "Old compute ID" %}</dt><dd>{{ event.old_compute_id|default:"-" }}</dd>
+<dt>{% trans "New compute ID" %}</dt><dd>{{ event.new_compute_id|default:"-" }}</dd>
+</dl></div></div>
+{% empty %}<p>{% trans "No server events." %}</p>{% endfor %}
+{% if older_url %}<a class="btn btn-default" href="{{ older_url }}">{% trans "Older events" %}</a>{% endif %}

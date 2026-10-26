@@ -1,0 +1,13 @@
+# Keep .git: pbr needs it for the version and package data.
+.tox
+.stestr
+.cache
+build
+dist
+*.egg-info
+releasenotes/build
+**/__pycache__
+**/*.pyc
+.ai
+.claude
+.cursor

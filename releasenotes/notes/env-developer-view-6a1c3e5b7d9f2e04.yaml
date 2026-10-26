@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    The Env vars tab has a Developer View button that swaps the table for
+    one .env text box (KEY=value per line, comments and quoted values).
+    Saving applies the whole set; invalid lines are reported and nothing is
+    saved. Normal View switches back.

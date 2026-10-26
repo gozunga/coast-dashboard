@@ -1,0 +1,39 @@
+{% load i18n coast_status %}
+<div class="detail">
+  <h4>{% trans "Overview" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    {% include "project/coast_common/_resource_id.html" with resource_id=item.id %}
+    <dt>{% trans "Name" %}</dt><dd>{{ item.name }}</dd>
+    <dt>{% trans "Status" %}</dt><dd>{{ item|status_badge }}</dd>
+    <dt>{% trans "Stack" %}</dt><dd>{{ item.stack_name }}</dd>
+    <dt>{% trans "App Group" %}</dt><dd>{{ item.appgroup_name }}</dd>
+    <dt>{% trans "Environment" %}</dt><dd>{{ item.environment_name }}</dd>
+    <dt>{% trans "Description" %}</dt><dd>{{ item.description|default:"-" }}</dd>
+    <dt>{% trans "Worker" %}</dt><dd>{% if item.worker_stack_url %}<a href="{{ item.worker_stack_url }}">{{ item.worker_name }}</a>{% else %}{{ item.worker_name }}{% endif %}</dd>
+    <dt>{% trans "Address" %}</dt>
+    <dd>
+      {% if item.primary_url %}<div><a href="{{ item.primary_url }}" target="_blank" rel="noopener">{{ item.primary_url }}</a> {% include "project/coast_common/_copy_button.html" with copy_value=item.primary_url %}</div>{% endif %}
+      {% for domain in item.domain_links %}<div><a href="{{ domain.href }}" target="_blank" rel="noopener">{{ domain.fqdn }}</a> {% include "project/coast_common/_copy_button.html" with copy_value=domain.href %}</div>{% endfor %}
+      <a href="{{ item.domains_url }}">{% trans "Manage domains" %}</a>
+    </dd>
+    {% if not item.primary_url and not item.ports and not item.domain_links %}
+    <dt>{% trans "Networking" %}</dt><dd>{% trans "No public networking (no port set)" %}</dd>
+    {% endif %}
+    <dt>{% trans "Health check" %}</dt><dd>{% if item.health_check == 'none' %}{% trans "None (container running is enough)" %}{% else %}HTTP{% endif %}</dd>
+    {% if item.health_check != 'none' %}
+    <dt>{% trans "Health check port" %}</dt><dd>{% firstof item.health_check_port item.ports "-" %}</dd>
+    <dt>{% trans "Health check path" %}</dt><dd>{{ item.healthcheck_path|default:"/" }}</dd>
+    {% endif %}
+    <dt>{% trans "Source" %}</dt><dd>{% if item.template_id or item.source.type == 'template' %}{% trans "Template:" %} {% firstof item.template_name item.source.template_name item.template_id item.source.template_id "-" as source_template %}{{ source_template|public_text }}{% else %}{{ item.source.type }} {{ item.source.repo_url }} {{ item.source.branch }} {% if item.change_image_url %}<a href="{{ item.change_image_url }}" title="{% trans 'Change image' %}">{{ item.source.image }}</a>{% else %}{{ item.source.image }}{% endif %} {{ item.source.tag }}{% endif %}</dd>
+    {% if item.source.deploy_key %}
+    <dt>{% trans "Public deploy key" %}</dt><dd><pre>{{ item.source.deploy_key.public_key }}</pre>{% include "project/coast_common/_copy_button.html" with copy_value=item.source.deploy_key.public_key %}</dd>
+    <dt>{% trans "Fingerprint" %}</dt><dd>{{ item.source.deploy_key.fingerprint }}</dd>
+    <dt>{% trans "Repository access" %}</dt><dd>{% trans "Add this key as a read-only deploy key in your repository, then deploy" %}
+      {% if item.replace_key_url %}<a class="btn btn-default ajax-modal" href="{{ item.replace_key_url }}">{% trans "Replace deploy key" %}</a>{% endif %}
+    </dd>
+    {% endif %}
+    {% if item.edit_dockerfile_url %}<dt>{% trans "Dockerfile" %}</dt><dd><a class="btn btn-default ajax-modal" href="{{ item.edit_dockerfile_url }}">{% trans "Edit Dockerfile" %}</a></dd>{% endif %}
+    <dt>{% trans "Ports" %}</dt><dd>{{ item.ports|default:"-" }}</dd>
+  </dl>
+</div>

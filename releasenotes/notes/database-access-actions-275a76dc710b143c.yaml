@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Database state actions follow the available operations for each status
+    and show busy-task errors. Public access defaults to Anywhere with an
+    internet-access warning; turning it off removes public exposure while
+    keeping the internal connection available.

@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Customers can add a worker or build server from a stack's Servers tab,
+    choosing a role-compatible flavor independently of the stack's plan.
+    The action checks project compute and volume quotas before submitting.
+    Coast API microversion 1.27 is required for the flavor allowlist and
+    customer-visible server flavor information.

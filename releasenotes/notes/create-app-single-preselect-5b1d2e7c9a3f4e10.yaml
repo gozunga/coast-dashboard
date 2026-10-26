@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Create App leaves the app group, environment and worker unselected when
+    there is more than one to choose from.

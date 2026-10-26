@@ -1,0 +1,33 @@
+{% load i18n coast_status %}
+<div class="detail">
+  <h4>{% trans "Activity" %}</h4>
+  {% if unavailable %}
+    <p>{% trans "Activity needs a newer Coast API" %}</p>
+  {% elif failed %}
+    <p>{% trans "Unable to retrieve activity." %}</p>
+  {% else %}
+    <table class="table table-striped">
+      <thead><tr>
+        <th scope="col">{% trans "Time" %}</th>
+        <th scope="col">{% trans "What" %}</th>
+        <th scope="col">{% trans "Outcome" %}</th>
+        <th scope="col">{% trans "Message" %}</th>
+      </tr></thead>
+      <tbody>
+        {% for event in events %}
+          <tr>
+            <td>{{ event.time|local_datetime }}</td>
+            <td>{{ event.what }}</td>
+            <td><span class="label label-{{ event.color }}">{{ event.outcome }}</span></td>
+            <td>{{ event.message }}{% if event.fields %}
+              <div class="small">{% for key, value in event.fields %}<span>{{ key }}: {{ value }}</span>{% if not forloop.last %}; {% endif %}{% endfor %}</div>
+            {% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="4">{% trans "No activity yet." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if older_url %}<a class="btn btn-default" href="{{ older_url }}">{% trans "Load older" %}</a>{% endif %}
+  {% endif %}
+</div>

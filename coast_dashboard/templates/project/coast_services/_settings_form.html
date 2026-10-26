@@ -1,0 +1,20 @@
+{% extends 'project/coast_services/_create.html' %}
+{% block form_attrs %}enctype="multipart/form-data" autocomplete="off" data-1p-ignore data-lpignore="true" data-bwignore{% endblock %}
+{% block modal-body %}
+  <div class="row">
+    <div class="col-sm-6">
+      <fieldset>
+        {% include "horizon/common/_form_errors.html" with form=form %}
+        {% for field in form.visible_fields %}
+          {% include "horizon/common/_form_field.html" with field=field %}
+          {% if field.name == 'ports' %}
+            <p class="help-block" id="{{ field.auto_id }}_help">{{ field.help_text }}</p>
+          {% endif %}
+        {% endfor %}
+      </fieldset>
+    </div>
+    <div class="col-sm-6">
+      {% block modal-body-right %}{{ block.super }}{% endblock %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load i18n coast_status breadcrumb_nav %}
+{% block breadcrumb_nav %}
+{% if is_template %}
+  {% include "bootstrap/breadcrumb.html" with breadcrumb=deployment_breadcrumb %}
+{% else %}
+  {% breadcrumb_nav %}
+{% endif %}
+{% endblock %}
+{% block main %}
+<div class="coast-detail">
+{% include 'project/coast_common/_detail_style.html' %}
+{% include 'project/coast_common/_copy_script.html' %}
+<p><a href="{{ deployments_url }}">{% trans "Back to deployments" %}</a></p>
+{% if can_cancel %}
+{% trans "Cancel this deployment?" as cancel_confirm %}
+<form method="post" action="{{ cancel_url }}" onsubmit="return confirm('{{ cancel_confirm|escapejs }}');">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger btn-sm">{% trans "Cancel Deployment" %}</button>
+</form>
+{% endif %}
+<div class="detail">
+  <h4>{% trans "Overview" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    {% include "project/coast_common/_resource_id.html" with resource_id=item.id %}
+    <dt>{% trans "Status" %}</dt><dd>{{ item|status_badge }}</dd>
+    <dt>{% trans "Fault" %}</dt><dd><div class="coast-fault" style="white-space:pre-wrap;font-family:{% if item.fault and 'Last output:' in item.fault %}monospace{% else %}inherit{% endif %};max-height:420px;overflow:auto;">{{ item.fault|default:"-" }}</div></dd>
+  </dl>
+</div>
+{% if is_template %}
+<div class="detail">
+  <h4>{% trans "Status and events" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Created" %}</dt><dd>{{ item.created_at|default:"-" }}</dd>
+    <dt>{% trans "Started" %}</dt><dd>{{ item.started_at|default:"-" }}</dd>
+    <dt>{% trans "Finished" %}</dt><dd>{{ item.finished_at|default:"-" }}</dd>
+  </dl>
+  <p><a href="{{ logs_url }}">{% trans "View live container logs" %}</a></p>
+</div>
+{% else %}
+<div class="detail">
+  <h4>{% trans "Build log" %} {% include "project/coast_common/_copy_button.html" with copy_target=".coast-deploy-log .coast-log-box" only %}</h4>
+  <hr class="header_rule">
+  <div class="coast-deploy-log" data-template="{{ is_template|yesno:'1,0' }}" data-fragment-url="{{ fragment_url }}" data-complete="{% if logs.complete or log_error %}1{% else %}0{% endif %}">
+    {% if not logs.complete and not log_error %}<p class="help-block coast-log-live">{% trans "Updating every 3 seconds while the deployment runs." %}</p>{% endif %}
+    <div class="coast-log-target">{% include "project/coast_services/_log_box.html" %}</div>
+  </div>
+</div>
+{% endif %}
+<script>
+(function () {
+  var root = document.querySelector('.coast-deploy-log');
+  if (!root || root.dataset.complete === '1') { return; }
+  var target = root.querySelector('.coast-log-target');
+  var timer = setInterval(function () {
+    fetch(root.dataset.fragmentUrl, {credentials: 'same-origin'})
+      .then(function (r) { return r.ok ? r.text() : Promise.reject(r.status); })
+      .then(function (html) {
+        var box = target.querySelector('.coast-log-box');
+        var atEnd = !box || box.scrollTop + box.clientHeight >= box.scrollHeight - 20;
+        target.innerHTML = html;
+        box = target.querySelector('.coast-log-box');
+        if (box && atEnd) { box.scrollTop = box.scrollHeight; }
+        var state = target.querySelector('.coast-log-state');
+        if (state && state.dataset.complete === '1') {
+          clearInterval(timer);
+          root.dataset.complete = '1';
+          var live = root.querySelector('.coast-log-live');
+          if (live) { live.remove(); }
+          // Apps reload once to show the final build status and fault.
+          if (root.dataset.template !== '1') { window.location.reload(); }
+        }
+      })
+      .catch(function () {});
+  }, 3000);
+})();
+</script>
+</div>
+{% endblock %}

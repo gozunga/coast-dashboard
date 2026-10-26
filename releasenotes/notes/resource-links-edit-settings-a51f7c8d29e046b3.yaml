@@ -1,0 +1,12 @@
+---
+fixes:
+  - |
+    Resource name links in Apps, Services, Environments, and App Groups
+    resolve detail URLs with explicit resource IDs.
+features:
+  - |
+    Apps and Services have an Edit Settings row action and a detail-page
+    button. The existing form supports name, ports, CPU and memory limits,
+    healthcheck path, description, and Git source branch updates. After save,
+    Overview shows a redeploy banner when Coast reports pending changes.
+    Replica edits are omitted because the API does not support replica PATCH.

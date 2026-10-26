@@ -1,0 +1,17 @@
+{% extends 'horizon/common/_detail.html' %}
+{% block breadcrumb_nav %}
+{% if is_template %}
+  {% include "bootstrap/breadcrumb.html" with breadcrumb=service_breadcrumb %}
+{% else %}
+  {{ block.super }}
+{% endif %}
+{% endblock %}
+{% block main %}
+<div class="coast-detail">
+{% include 'project/coast_common/_detail_style.html' %}
+{% include 'project/coast_common/_copy_script.html' %}
+{% include 'project/coast_common/_detail_actions_script.html' %}
+{% if service %}{% include 'project/coast_services/_settings_controls.html' %}{% endif %}
+{{ block.super }}
+</div>
+{% endblock %}

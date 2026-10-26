@@ -1,0 +1,21 @@
+{% load i18n %}
+<h3>{% trans "Compose configuration" %}</h3>
+<div id="compose-help">
+  <p>{% trans "Edit the YAML saved by Coast. Save stores the full document. Save and redeploy also starts a deployment with this document." %}</p>
+  <p>{% trans "Container images, environment variables, ports, and local named volumes are allowed. New volumes use your storage quota. Removing a volume does not delete its data or release its quota." %}</p>
+  <p>{% trans "Host paths, the Docker socket, privileged containers, host network/pid/ipc/uts/user namespaces, devices, and added capabilities are rejected. File imports, build contexts, external volumes or networks, security options, and custom log drivers are also rejected. The API checks all changes." %}</p>
+  <p>{% trans "The default limit is 10,000 UTF-8 bytes. Your operator can change this limit. Git Compose files are not imported. Some engines cannot edit application Compose content. YAML can contain secrets; only project members and admins can use this editor." %}</p>
+</div>
+{% if compose_error %}<div class="alert alert-danger" role="alert">{{ compose_error }}</div>{% endif %}
+{% if compose_form %}
+<form method="post" action="{{ compose_url }}" autocomplete="off">
+  <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_value }}">
+  {% if compose_form.errors %}<div class="alert alert-danger" role="alert">{{ compose_form.non_field_errors }}{{ compose_form.yaml.errors }}{{ compose_form.operation.errors }}</div>{% endif %}
+  <div class="form-group{% if compose_form.yaml.errors %} has-error{% endif %}">
+    {{ compose_form.yaml.label_tag }}
+    {{ compose_form.yaml }}
+  </div>
+  <button type="submit" class="btn btn-default" name="operation" value="save">{% trans "Save" %}</button>
+  <button type="submit" class="btn btn-primary" name="operation" value="redeploy">{% trans "Save and redeploy" %}</button>
+</form>
+{% endif %}

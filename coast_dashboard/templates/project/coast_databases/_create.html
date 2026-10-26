@@ -1,0 +1,36 @@
+{% extends 'horizon/common/_modal_form.html' %}
+{% load i18n %}
+{% block form_attrs %}data-coast-name-defaults{% endblock %}
+{% block modal-body-right %}
+{{ form.defaults|json_script }}
+{% include 'project/coast_oneclick/_name_defaults.html' %}
+{% include 'project/coast_services/_environment_filter.html' %}
+<p>{% trans "Apps on the same server can reach this database using its internal host. Public access is off by default." %}</p>
+<script>
+(function () {
+var script = document.currentScript;
+var form = script.closest('form');
+var connection = document.createElement('details');
+var connectionSummary = document.createElement('summary');
+connectionSummary.textContent = '{% trans "Connection settings" %}';
+connection.appendChild(connectionSummary);
+var note = document.createElement('p');
+note.textContent = '{% trans "Coast generates a strong password and stores it securely. After the database is created, reveal it with Show password on its Overview tab." %}';
+connection.appendChild(note);
+var version = form.querySelector('[name="version"]').closest('.form-group');
+version.parentNode.insertBefore(connection, version.nextSibling);
+['database', 'username'].forEach(function (name) {
+var field = form.querySelector('[name="' + name + '"]');
+if (field) { connection.appendChild(field.closest('.form-group')); }
+});
+var advanced = document.createElement('details');
+var summary = document.createElement('summary');
+summary.textContent = '{% trans "Advanced" %}';
+advanced.appendChild(summary);
+['cpu_limit', 'memory_limit_mb'].forEach(function (name) {
+var field = form.querySelector('[name="' + name + '"]');
+if (field) { var group = field.closest('.form-group'); if (!advanced.parentNode) { group.parentNode.insertBefore(advanced, group); } advanced.appendChild(group); }
+});
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The Services panel includes the Coast template catalog, a Create
+    Service form, and a Deploy action for each template. Creation requires
+    an active worker in the app group stack and requests deployment.

@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    The stack Topology Servers panel counts apps and services separately
+    (for example "1 app, 1 service"), omits zero parts, and shows "No apps"
+    when a server runs nothing.

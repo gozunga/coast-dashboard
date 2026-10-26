@@ -1,0 +1,5 @@
+{% load i18n %}
+<h3>{% trans "Container config files" %}</h3>
+<p>{% trans "Files are placed inside the container only. Add, edit and delete changes apply on the next deploy." %}</p>
+<p>{% trans "Content is write-only. The API does not return file sizes or support file modes." %}</p>
+{{ files_table.render }}

@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Environment lists omit the Status column. Non-active environments show a
+    badge next to their name using the shared status colors: Creating for
+    pending environments, Deleting during deletion, Error on failure, and
+    title-cased labels for other states. Active environments have no badge.
+    This also applies to app group environment links and related tables and
+    to environment names in Apps and Services. AJAX row updates are preserved.

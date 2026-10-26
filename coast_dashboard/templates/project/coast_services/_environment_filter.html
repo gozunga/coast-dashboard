@@ -1,0 +1,45 @@
+{{ form.environment_groups|json_script:"coast-environment-groups" }}
+{{ form.appgroup_stacks|json_script:"coast-appgroup-stacks" }}
+{{ form.worker_stacks|json_script:"coast-worker-stacks" }}
+<script>
+(function ($) {
+  'use strict';
+  function init() {
+    $('form').has('#coast-environment-groups').each(function () {
+      var form = this;
+      var group = form.elements.namedItem('appgroup_id');
+      var environment = form.elements.namedItem('environment_id');
+      var worker = form.elements.namedItem('server_id');
+      // Forms without placement fields (such as env vars) have nothing to do.
+      if (!group || !environment || !worker) { return; }
+      var map = JSON.parse($(form).find('#coast-environment-groups').text());
+      var groups = JSON.parse($(form).find('#coast-appgroup-stacks').text());
+      var workers = JSON.parse($(form).find('#coast-worker-stacks').text());
+      function filter(field, mapping, parent) {
+        if (field.disabled) { return; }
+        var valid = [];
+        Array.from(field.options).forEach(function (option) {
+          var allowed = !option.value || mapping[option.value] === parent;
+          option.hidden = !allowed;
+          option.disabled = !allowed;
+          if (allowed && option.value) { valid.push(option.value); }
+        });
+        if (valid.indexOf(field.value) === -1) {
+          field.value = valid.length === 1 ? valid[0] : '';
+        }
+      }
+      function update() {
+        filter(environment, map, group.value);
+        filter(worker, workers, groups[group.value]);
+      }
+      update();
+    });
+  }
+  $(init);
+  var selector = 'form:has(#coast-environment-groups) select[name="appgroup_id"]';
+  $(document).off('change.coastPlacement', selector)
+    .on('change.coastPlacement', selector, init);
+  $(document).off('shown.bs.modal.coastEnvironments')
+    .on('shown.bs.modal.coastEnvironments', init);
+}(jQuery));
+</script>

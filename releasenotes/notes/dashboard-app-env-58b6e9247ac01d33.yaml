@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    App Groups and Environments have create actions with ACTIVE parent
+    choices and delete actions with confirmation. Transitional rows refresh.
+    Create App supports public HTTPS Git repositories with an optional base
+    directory and container images with a tag. Source fields follow the
+    source type. Creation requests the first deployment.

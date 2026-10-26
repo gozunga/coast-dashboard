@@ -1,0 +1,10 @@
+{% load i18n %}
+<table class="table table-striped">
+<thead><tr><th>{% trans "Protocol" %}</th><th>{% trans "Ports" %}</th><th>{% trans "Source" %}</th><th>{% trans "Description" %}</th><th>{% trans "Owner" %}</th>{% if editable %}<th>{% trans "Actions" %}</th>{% endif %}</tr></thead>
+<tbody>{% for rule in rules %}<tr>
+<td>{{ rule.protocol|upper }}</td><td>{% if rule.protocol == 'icmp' %}{% trans "No ports" %}{% else %}{{ rule.port_range_min }}{% if rule.port_range_max != rule.port_range_min %}:{{ rule.port_range_max }}{% endif %}{% endif %}</td>
+<td>{{ rule.source }}</td><td>{{ rule.description }}</td>
+<td>{% if rule.managed %}{% trans "Managed by Coast" %}{% else %}{% trans "Customer-added" %}{% endif %}</td>
+{% if editable %}<td>{% if not rule.managed %}<form method="post" action="{% url 'horizon:project:coast.stacks:delete_ingress_rule' item.id rule.id %}">{% csrf_token %}<button type="submit" class="btn btn-danger btn-sm">{% trans "Delete" %}</button></form>{% endif %}</td>{% endif %}
+</tr>{% empty %}<tr><td colspan="6">{% trans "No rules to display." %}</td></tr>{% endfor %}</tbody>
+</table>

@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    The Project dashboard has an App Hosting panel group with Stacks,
+    App Groups, Environments, Apps and Services. Panels require an
+    ``app-hosting`` catalog entry and use python-coastclient.

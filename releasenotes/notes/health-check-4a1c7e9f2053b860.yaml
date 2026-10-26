@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    App creation, service templates with ports, and Edit Settings offer
+    an optional HTTP health check. New apps default to None, so background
+    workers can run without ports. HTTP checks support a port and path and
+    use Coast API microversion 1.4. Existing apps keep their HTTP setting.
+    The overview shows the check type and identifies apps with no public URL.

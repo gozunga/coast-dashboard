@@ -1,0 +1,25 @@
+{% load i18n coast_status %}
+{% include "project/coast_common/_detail_dl_style.html" %}
+<div class="detail">
+  <h4>{% trans "Overview" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal coast-detail-dl">
+    {% include "project/coast_common/_resource_id.html" with resource_id=item.id %}
+    <dt>{% trans "Name" %}</dt><dd>{{ item.name }}</dd>
+    <dt>{% trans "Status" %}</dt><dd>{{ item|status_badge }}</dd>
+    <dt>{% trans "Created" %}</dt><dd>{{ item.created_at|local_datetime }}</dd>
+    <dt>{% trans "Plan" %}</dt><dd>{{ item.plan|default:"-" }}</dd>
+    <dt>{% trans "Engine version" %}</dt><dd>{{ item.engine_version|default:"-" }}</dd>
+  </dl>
+</div>
+
+{% if dns_supported %}
+<p>{% trans "Default domain" %}: {{ item.default_domain|default:"sslip.io" }}
+<a href="{% url 'horizon:project:coast.stacks:dns' item.id %}" class="btn btn-default ajax-modal">{% trans "Edit default domain" %}</a></p>
+{% if item.zone_id %}<p>{% trans "Coast will create DNS records in the linked zone." %}</p>{% endif %}
+{% endif %}
+
+{% if firewall_supported %}
+<p>{% trans "Open ports:" %} 80, 443{% if custom_rule_count %} (+{{ custom_rule_count }} {% trans "custom" %}){% endif %}
+<a href="?tab=stack_details__firewall">{% trans "Edit rules" %}</a></p>
+{% endif %}

@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    App Groups omit the Status column and show badges next to non-active names:
+    Creating for pending groups, Deleting during deletion, Error on failure,
+    and title-cased labels for other states. Active names have no badge.
+    App group references in Environments, Apps, Services, and detail tables use
+    the same display. Badge labels, colors, and AJAX polling are shared with
+    environments.

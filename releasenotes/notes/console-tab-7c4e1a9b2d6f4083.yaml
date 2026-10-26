@@ -1,0 +1,12 @@
+---
+features:
+  - |
+    Project members and admins can open a console from the Console tab on
+    an app or a service. Connect asks Coast for a session address with
+    ``POST /v1/apps/{id}/console`` or ``POST /v1/services/{id}/console``
+    at microversion 1.9. The browser opens that session. Coast records
+    when the session opens and when it closes, and does not record
+    keystrokes or screen text. By default sessions close after 15 minutes
+    without terminal data
+    in either direction or four hours total; operators can change the
+    limits. Readers do not see the tab.

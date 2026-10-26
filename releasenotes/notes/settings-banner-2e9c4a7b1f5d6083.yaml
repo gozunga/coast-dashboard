@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Edit Settings is available from app and service rows and detail headers.
+    When Coast reports ``pending_changes``, Overview shows a redeploy banner.
+    Redeploy availability follows the resource and deployment state.

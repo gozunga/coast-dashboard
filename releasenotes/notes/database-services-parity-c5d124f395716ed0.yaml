@@ -1,0 +1,7 @@
+fixes:
+  - |
+    Database creation now uses a searchable engine table with descriptions,
+    available versions, and a create action for each engine. Placement is
+    preserved when creating databases from an app group. Standalone database
+    cards no longer appear in Services; bundled application templates remain
+    available. App group tabs now follow the Apps, Databases, Services order.

@@ -1,0 +1,30 @@
+<script>
+(function ($) {
+  'use strict';
+  function update() {
+    $('select[name="health_check"]').each(function () {
+      var form = $(this).closest('form');
+      var available = true;
+      var template = form.find('[name="template_id"]');
+      if (template.length) {
+        var defaults = JSON.parse(form.find('script[type="application/json"]').first().text());
+        available = Boolean(defaults.ports[template.val()]);
+      }
+      $(this).closest('.form-group').toggle(available);
+      $(this).prop('disabled', !available);
+      var http = available && this.value === 'http';
+      form.find('[name="health_check_port"], [name="healthcheck_path"]')
+        .prop('disabled', !http).closest('.form-group').toggle(http);
+      var ports = form.find('[name="ports"]');
+      var required = http || ports.attr('data-has-domain') === 'true';
+      ports.prop('required', required).attr('aria-required', String(required));
+      ports.closest('.form-group').toggleClass('required', required)
+        .find('label').toggleClass('required', required);
+    });
+  }
+  $(update);
+  $(document).off('change.coastHealth', 'select[name="health_check"], select[name="template_id"]')
+    .on('change.coastHealth', 'select[name="health_check"], select[name="template_id"]', update);
+  $(document).off('shown.bs.modal.coastHealth').on('shown.bs.modal.coastHealth', update);
+}(jQuery));
+</script>

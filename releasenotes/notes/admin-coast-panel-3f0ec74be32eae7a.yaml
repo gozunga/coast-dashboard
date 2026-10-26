@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Add a read-only Coast panel to Horizon's Admin dashboard. Operators can
+    inspect stacks across projects, map servers to Nova instances and Glance
+    images, inspect attached volumes and workload placement, and read server
+    history. Access requires Horizon admin permissions and Coast admin policy
+    checks. The panel uses admin stack inventory API microversion 1.18,
+    including explicit cross-project stack detail reads and Nova IDs in
+    server create/delete and failover history. Missing fields remain optional.

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block main %}
+  <p>{% trans "Services deploy one-click templates such as Postgres. Each service runs in an environment on a worker in the app group stack." %}</p>
+  {% include 'project/coast_appgroups/_filter.html' %}
+  {{ oneclick_table.render }}
+  {% include 'project/coast_oneclick/_catalog_search.html' %}
+  {{ templates_table.render }}
+  {% if templates_page.has_other_pages %}
+    <nav aria-label="{% trans 'Template pages' %}">
+      {% if templates_previous_url %}<a class="btn btn-default" href="{{ templates_previous_url }}">{% trans "Previous" %}</a>{% endif %}
+      <span>{% blocktrans with number=templates_page.number total=templates_page.paginator.num_pages %}Page {{ number }} of {{ total }}{% endblocktrans %}</span>
+      {% if templates_next_url %}<a class="btn btn-default" href="{{ templates_next_url }}">{% trans "Next" %}</a>{% endif %}
+    </nav>
+  {% endif %}
+{% endblock %}

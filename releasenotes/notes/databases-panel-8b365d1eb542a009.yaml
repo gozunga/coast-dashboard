@@ -1,0 +1,9 @@
+features:
+  - |
+    Added a Databases panel with an engine catalog, database creation,
+    connection details, and deletion with name confirmation. Standalone database
+    engines use Databases; bundled application templates remain in Services.
+    Members can reveal credentials on demand; passwords are never included
+    in the initial page or cached.
+    Supported engines and versions are shown in the create form and come
+    from Coast's ``coast/common/engine_versions.py``.

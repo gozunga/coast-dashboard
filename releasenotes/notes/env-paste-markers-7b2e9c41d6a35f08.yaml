@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    The environment variable Developer view (.env paste) accepts a
+    ``# secret`` trailing marker that stores the value as a secret, next to
+    the existing ``# runtime-only`` and ``# build-time`` markers. Markers
+    combine with commas in any order, for example
+    ``KEY=value # secret, runtime-only``. Secret rows render with
+    ``# secret`` so the text round-trips. Unmarked lines never make a secret
+    plain again.

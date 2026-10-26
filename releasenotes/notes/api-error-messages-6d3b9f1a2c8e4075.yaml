@@ -1,0 +1,8 @@
+---
+fixes:
+  - |
+    Create and update forms show Coast API 4xx fault messages. Server errors
+    use a generic message.
+  - |
+    Create Stack lists only Nova flavors that have a Coast plan for each
+    role (App engine server, worker, build server).

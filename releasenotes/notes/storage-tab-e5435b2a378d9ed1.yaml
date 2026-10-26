@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    App and service Storage tabs list typed service mounts at API 1.19.
+    Members and admins can create and edit user mounts; managers and admins
+    can delete them. Template-origin mounts are read-only in the dashboard.
+    Deleting a mount keeps its data; deploy to apply mount changes.

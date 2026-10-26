@@ -1,0 +1,34 @@
+{% load i18n %}
+<div class="coast-logs" data-fragment-url="{{ fragment_url }}">
+  <p class="help-block">{% blocktrans %}Last {{ tail }} runtime log lines.{% endblocktrans %}
+    <button type="button" class="btn btn-default btn-sm coast-log-refresh">{% trans "Refresh" %}</button>
+    {% include "project/coast_common/_copy_button.html" with copy_target=".coast-logs .coast-log-box" only %}
+    <label style="margin-left:12px;font-weight:normal;"><input type="checkbox" class="coast-log-auto" checked> {% trans "Auto-refresh every 3 seconds" %}</label>
+  </p>
+  <div class="coast-log-target">{% include "project/coast_services/_log_box.html" %}</div>
+</div>
+<script>
+(function () {
+  var root = document.querySelector('.coast-logs');
+  if (!root || root.dataset.bound) { return; }
+  root.dataset.bound = '1';
+  var target = root.querySelector('.coast-log-target');
+  var timer = setInterval(refresh, 3000);
+  function refresh() {
+    fetch(root.dataset.fragmentUrl, {credentials: 'same-origin'})
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        target.innerHTML = html;
+        var box = target.querySelector('.coast-log-box');
+        if (box) { box.scrollTop = box.scrollHeight; }
+      });
+  }
+  root.querySelector('.coast-log-refresh').addEventListener('click', refresh);
+  root.querySelector('.coast-log-auto').addEventListener('change', function (e) {
+    if (timer) { clearInterval(timer); timer = null; }
+    if (e.target.checked) { timer = setInterval(refresh, 3000); }
+  });
+  var box = target.querySelector('.coast-log-box');
+  if (box) { box.scrollTop = box.scrollHeight; }
+})();
+</script>

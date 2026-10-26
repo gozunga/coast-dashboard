@@ -1,0 +1,101 @@
+# GitLab CI for coast-dashboard: tox checks and a current-tree secret scan.
+#
+# Merge requests: pep8 and gitleaks always run; py3 runs when Python, templates,
+# static assets or build files change; releasenotes runs when notes change.
+# Pipelines on main and web-triggered pipelines run every job.
+default:
+  image: python:3.12
+  interruptible: true
+  before_script:
+    - pip install "tox>=4"
+  cache:
+    key:
+      prefix: "$CI_JOB_NAME"
+      files:
+        - test-requirements.txt
+    paths:
+      - .cache/pip
+      - .tox
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  GIT_DEPTH: 50
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "web"
+    # Release tags: created tags, and pipelines run for a tag via the API.
+    - if: $CI_COMMIT_TAG && $CI_PIPELINE_SOURCE =~ /^(push|api)$/
+
+pep8:
+  script:
+    - tox -e pep8
+
+py3:
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+    - changes:
+        - coast_dashboard/**/*
+        - manage.py
+        - requirements.txt
+        - test-requirements.txt
+        - setup.cfg
+        - setup.py
+        - tox.ini
+        - .gitlab-ci.yml
+  script:
+    - tox -e py3
+
+releasenotes:
+  # reno walks the whole history; a shallow clone misses older commits.
+  variables:
+    GIT_DEPTH: 0
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "merge_request_event"
+    - changes:
+        - releasenotes/**/*
+        - tox.ini
+        - .gitlab-ci.yml
+  script:
+    - tox -e releasenotes
+
+gitleaks:
+  image:
+    name: zricethezav/gitleaks:v8.30.0
+    entrypoint: [""]
+  before_script: []
+  cache: []
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    # Scan the current tree; existing history is outside this release check.
+    - gitleaks dir --redact --no-banner .
+
+# Publish a release snapshot to the public GitHub repo. Manual, and only in
+# a tag pipeline: the one started by creating the tag, or one run for the
+# tag from the web UI or the API. tools/publish-snapshot.sh drops the
+# .publish-exclude paths, runs gitleaks and pushes one commit plus the tag
+# without force.
+# GITHUB_PUBLISH_TOKEN must be a masked, protected variable, so the tag
+# must be protected too.
+publish-github:
+  stage: deploy
+  # Publish only what passed every validation job in this pipeline.
+  needs:
+    - pep8
+    - py3
+    - releasenotes
+  interruptible: false
+  before_script: []
+  cache: []
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_PIPELINE_SOURCE =~ /^(push|api|web)$/
+      when: manual
+    - when: never
+  script:
+    - tools/publish-snapshot.sh "$CI_COMMIT_TAG"

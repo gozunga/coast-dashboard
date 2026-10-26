@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Overview links the worker name to its stack. Runtime Logs auto-refresh
+    every three seconds.

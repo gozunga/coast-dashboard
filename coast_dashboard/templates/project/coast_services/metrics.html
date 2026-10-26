@@ -1,0 +1,31 @@
+{% load i18n static %}
+<div class="coast-metrics" data-url="{{ metrics_url }}" data-logic="{% static 'coast_dashboard/metrics.js' %}">
+  <label>{% trans "Time range" %}
+    <select class="form-control coast-metrics-range">
+      <option value="15m">{% trans "15 min" %}</option>
+      <option value="1h" selected>{% trans "1 hour" %}</option>
+      <option value="6h">{% trans "6 hours" %}</option>
+      <option value="24h">{% trans "24 hours" %}</option>
+      <option value="7d">{% trans "7 days" %}</option>
+      <option value="30d">{% trans "30 days" %}</option>
+    </select>
+  </label>
+  <p class="help-block">{% trans "Auto-refresh every 30 seconds" %}</p>
+  <p class="coast-metrics-status" role="status" aria-live="polite"></p>
+  <div class="coast-metrics-data"></div>
+</div>
+<script>
+(function () {
+  var node = document.querySelector('.coast-metrics:not([data-bound])');
+  if (!node) { return; }
+  function start() { window.coastMetrics.mountAll(); }
+  if (window.coastMetrics) { start(); return; }
+  var script = document.createElement('script');
+  script.src = node.dataset.logic;
+  script.onload = start;
+  script.onerror = function () {
+    node.querySelector('.coast-metrics-status').textContent = 'Unable to load metrics. Reload the page to try again.';
+  };
+  document.head.appendChild(script);
+})();
+</script>

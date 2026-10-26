@@ -1,0 +1,42 @@
+<script>
+(function ($) {
+  'use strict';
+  function fallback(value) {
+    var active = document.activeElement;
+    var field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:fixed;left:-9999px;top:0;';
+    document.body.appendChild(field);
+    try {
+      field.select();
+      if (!document.execCommand('copy')) { throw new Error('Copy failed'); }
+    } finally {
+      field.remove();
+      if (active) { active.focus({preventScroll: true}); }
+    }
+  }
+  $(document).off('click.coastCopy', '[data-copy-value], [data-copy-target]')
+    .on('click.coastCopy', '[data-copy-value], [data-copy-target]', async function (event) {
+      event.preventDefault();
+      var button = this;
+      var feedback = button.querySelector('.coast-copy-feedback');
+      try {
+        var target = button.getAttribute('data-copy-target');
+        var value = target ? document.querySelector(target).textContent :
+          button.getAttribute('data-copy-value');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          try { await navigator.clipboard.writeText(value); }
+          catch (error) { fallback(value); }
+        } else { fallback(value); }
+        feedback.textContent = ' ' + button.getAttribute('data-copied-label');
+      } catch (error) {
+        feedback.textContent = ' ' + button.getAttribute('data-copy-error-label');
+      }
+      clearTimeout(button.coastCopyTimer);
+      button.coastCopyTimer = setTimeout(function () {
+        feedback.textContent = '';
+      }, 1500);
+    });
+}(jQuery));
+</script>

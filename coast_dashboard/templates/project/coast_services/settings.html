@@ -1,0 +1,61 @@
+{% load i18n %}
+<div class="coast-env">
+  <div class="clearfix" style="margin-bottom:10px;">
+    <p class="pull-left" style="margin:6px 0 0;">{% trans "Environment variables save at any time and apply on the next redeploy. Secret values are hidden." %}</p>
+    <button type="button" class="btn btn-default btn-sm pull-right coast-env-toggle"
+            data-normal="{% trans "Normal View" %}" data-developer="{% trans "Developer View" %}">{% if developer_active %}{% trans "Normal View" %}{% else %}{% trans "Developer View" %}{% endif %}</button>
+  </div>
+  <div class="coast-env-normal"{% if developer_active %} style="display:none;"{% endif %}>
+    {{ env_table.render }}
+  </div>
+  <div class="coast-env-developer"{% if not developer_active %} style="display:none;"{% endif %}>
+    <form method="post" action="{{ developer_url }}" autocomplete="off" data-1p-ignore data-lpignore="true" data-bwignore>
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_value }}">
+      <div class="alert alert-info" style="padding:8px 12px;">
+        {% blocktrans %}Inline comments with a space before # (e.g. <code>KEY=value #comment</code>) are stripped.{% endblocktrans %}
+        {% if env_app %}<p>{% trans "New keys use build-time by default. Plain lines keep existing flags. Add # runtime-only to turn build-time off, or # build-time to turn it on." %}</p>{% endif %}
+        {% trans "Saving replaces the full set: removed lines delete their variables. Secret values show as ******** and stay unchanged unless you replace them." %}
+        <p>{% blocktrans %}Add <code># secret</code> after a value to store it as a secret. Combine markers with commas in any order, for example <code>KEY=value # secret, runtime-only</code>.{% endblocktrans %}</p>
+      </div>
+      <textarea name="dotenv_text" class="form-control" rows="18" spellcheck="false"
+                autocomplete="off" data-1p-ignore data-lpignore="true" data-bwignore
+                style="font-family:monospace;">{{ dotenv_text }}</textarea>
+      <div style="margin-top:10px;">
+        <button type="submit" class="btn btn-primary">{% trans "Save" %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+(function () {
+  var roots = document.querySelectorAll('.coast-env');
+  var root = roots[roots.length - 1];
+  var btn = root.querySelector('.coast-env-toggle');
+  root.addEventListener('change', function (event) {
+    var checkbox = event.target;
+    if (!checkbox.classList.contains('coast-build-time')) return;
+    checkbox.disabled = true;
+    fetch(checkbox.dataset.url, {
+      method: 'POST', credentials: 'same-origin',
+      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: 'csrfmiddlewaretoken=' + encodeURIComponent(checkbox.dataset.csrf) +
+            '&build_time=' + checkbox.checked
+    }).then(function (response) {
+      if (!response.ok) throw new Error('save');
+      window.location.reload();
+    }).catch(function () {
+      checkbox.checked = !checkbox.checked;
+      checkbox.disabled = false;
+      window.alert('{% trans "Unable to save environment variable." %}');
+    });
+  });
+  btn.addEventListener('click', function () {
+    var dev = root.querySelector('.coast-env-developer');
+    var normal = root.querySelector('.coast-env-normal');
+    var showDev = dev.style.display === 'none';
+    dev.style.display = showDev ? '' : 'none';
+    normal.style.display = showDev ? 'none' : '';
+    btn.textContent = showDev ? btn.dataset.normal : btn.dataset.developer;
+  });
+})();
+</script>

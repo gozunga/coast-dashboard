@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Stacks can use a project DNS zone as the default domain for new apps.
+    App and service domains can use a host and a project zone with automatic
+    DNS management. The Domains tab shows Coast-managed records and keeps
+    manual record instructions for external zones. These controls require
+    the DNS API microversion and are hidden on older Coast deployments.

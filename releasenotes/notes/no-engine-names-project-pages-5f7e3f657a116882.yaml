@@ -1,0 +1,10 @@
+---
+fixes:
+  - |
+    Project pages no longer show the names of Coast's internal application
+    engine or proxy, even when a fault, event, log note, backup error or
+    one-click template name quotes them, and even for cloud admins browsing
+    a project. Every Coast response now passes one neutral-wording boundary
+    in the dashboard's Coast API module; the admin panel's all-projects
+    views keep full detail. A test fails if a project template, script or
+    string names them.

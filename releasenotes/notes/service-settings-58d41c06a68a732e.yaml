@@ -1,0 +1,6 @@
+---
+features:
+  - |
+    Apps and services have separate Env vars and Domains tabs. Variables
+    can be added, edited and deleted without replacing unrelated keys.
+    Saved secret values stay hidden; Coast reports when redeploy is needed.

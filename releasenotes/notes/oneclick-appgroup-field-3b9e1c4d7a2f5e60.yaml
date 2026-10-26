@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Create Service sends the selected app group as ``appgroup_id``, along
+    with its environment and worker IDs.

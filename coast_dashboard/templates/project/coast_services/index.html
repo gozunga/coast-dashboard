@@ -1,0 +1,6 @@
+{% extends 'project/coast_appgroups/filtered_list.html' %}
+{% load i18n %}
+{% block main %}
+<p>{% trans "Apps deploy your code from Git, a Dockerfile, or a container image. Each app runs in an environment on a worker in the app group stack." %}</p>
+{{ block.super }}
+{% endblock %}

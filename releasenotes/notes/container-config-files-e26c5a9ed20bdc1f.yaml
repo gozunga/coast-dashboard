@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Apps and services have a Files tab beside Storage. Users can add,
+    edit, and delete container config files through Coast microversion 1.15.
+    File changes apply on the next deploy. Content is write-only; editing
+    preserves it unless replacement is selected. The dashboard shows Coast
+    validation messages and uses the standard delete confirmation.
+    File sizes are not returned by the API, and permission modes cannot be
+    set. Template services can select a container by name.

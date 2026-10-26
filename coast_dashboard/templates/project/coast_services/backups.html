@@ -1,0 +1,88 @@
+{% load i18n %}
+{% if backups_error %}
+  <div class="alert alert-warning" role="alert">{{ backups_error }}</div>
+{% else %}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">{% trans "Backup schedule and retention" %}</h3>
+  </div>
+  <div class="panel-body">
+    <p class="help-block">{% trans "Backups are off by default. Suggested: daily at 02:00 UTC, with 14 daily and 8 weekly backups." %}</p>
+    <p class="help-block">{% trans "Backups need object storage in this cloud." %}</p>
+    <p class="help-block">{% trans "This cloud supports daily schedules. Retention applies to scheduled backups; manual and safety backups need explicit deletion." %}</p>
+    {% if not policy_configured %}
+    <p class="help-block">{% trans "Select a database engine and container, then save the policy before your first backup." %}</p>
+    {% endif %}
+    {% if can_manage %}
+    <form method="post" action="{{ action_url }}" class="form-horizontal">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_value }}">
+      {% for field in policy_form %}
+      <div class="form-group">
+        <label class="col-sm-3 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <div class="col-sm-6">
+          {{ field }}{{ field.errors }}
+          {% if field.help_text %}<p class="help-block">{{ field.help_text }}</p>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col-sm-offset-3 col-sm-9">
+        <button type="submit" name="operation" value="save" class="btn btn-primary">{% trans "Save policy" %}</button>
+      </div>
+    </form>
+    {% else %}
+      {{ policy_form.as_p }}
+    {% endif %}
+  </div>
+</div>
+<div class="table_wrapper">
+  <div class="table_header">
+    <h3 class="table_title">{% trans "Backups" %}</h3>
+    {% if can_manage %}
+    <form action="{{ action_url }}" method="post">
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_value }}">
+      <button type="submit" name="operation" value="create" class="btn btn-primary"{% if not policy_configured %} disabled{% endif %}>{% trans "Back up now" %}</button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>{% trans "Time (UTC)" %}</th>
+          <th>{% trans "Kind" %}</th>
+          <th>{% trans "Size" %}</th>
+          <th>{% trans "Duration" %}</th>
+          <th>{% trans "Status" %}</th>
+          <th>{% trans "Error" %}</th>
+          <th>{% trans "Actions" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for backup in backups %}
+        <tr>
+          <td>{% if backup.started_at %}{{ backup.started_at }}{% else %}{% trans "Not available" %}{% endif %}</td>
+          <td>{{ backup.kind|capfirst }}</td>
+          <td>{% if backup.size_bytes != None %}{{ backup.size_bytes|filesizeformat }}{% else %}{% trans "Not available" %}{% endif %}</td>
+          <td>{% if backup.duration_seconds != None %}{{ backup.duration_seconds }} {% trans "s" %}{% else %}{% trans "Not available" %}{% endif %}</td>
+          <td>{{ backup.status|capfirst }}</td>
+          <td>{% if backup.error %}{{ backup.error }}{% else %}{% trans "None" %}{% endif %}</td>
+          <td>
+            {% if can_manage %}
+              {% if backup.ready %}
+                <a class="btn btn-default btn-sm ajax-modal" href="{{ backup.restore_url }}">{% trans "Restore" %}</a>
+                <a class="btn btn-default btn-sm" href="{{ backup.download_url }}">{% trans "Download" %}</a>
+              {% endif %}
+              {% if backup.can_delete %}
+                <a class="btn btn-danger btn-sm ajax-modal" href="{{ backup.delete_url }}">{% trans "Delete" %}</a>
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7">{% trans "No backups yet." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}

@@ -1,0 +1,16 @@
+{% load i18n %}
+{% include "project/coast_common/_detail_dl_style.html" %}
+<h3>{% trans "Stack resources" %}</h3>
+<p>{% trans "The owning project owns the stack. Servers and volumes run in the service project. If no service project is supplied, resources use the owning project. A dash means that the API did not supply the field." %}</p>
+<dl class="dl-horizontal coast-detail-dl">
+{% for label, value in fields %}<dt>{{ label }}</dt><dd>{{ value|default_if_none:"-" }}</dd>{% endfor %}
+</dl>
+
+<h4>{% trans "Worker security group rules" %}</h4>
+{% if ingress_rules != None %}
+{% include 'project/coast_stacks/_ingress_rules.html' with rules=ingress_rules %}
+{% endif %}
+<table class="table table-striped">
+<thead><tr><th>{% trans "Direction" %}</th><th>{% trans "Protocol" %}</th><th>{% trans "Ports" %}</th><th>{% trans "Source / destination" %}</th><th>{% trans "Description" %}</th><th>{% trans "Owner" %}</th></tr></thead>
+<tbody>{% for rule in worker_rules %}<tr><td>{{ rule.direction }}</td><td>{{ rule.ip_protocol|default:"Any" }}</td><td>{{ rule.from_port|default_if_none:"Any" }}:{{ rule.to_port|default_if_none:"Any" }}</td><td>{{ rule.source }}</td><td>{{ rule.description }}</td><td>{% if rule.customer_added %}{% trans "Customer-added" %}{% else %}-{% endif %}</td></tr>{% empty %}<tr><td colspan="6">{% trans "No Neutron rules available." %}</td></tr>{% endfor %}</tbody>
+</table>

@@ -1,0 +1,2 @@
+{% load i18n %}{% if log_error %}<div class="alert alert-danger coast-log-error">{{ log_error }}</div>{% else %}{% if logs.note %}<div class="alert alert-warning coast-log-note">{{ logs.note }}</div>{% endif %}<pre class="coast-log-box" style="max-height:480px;overflow:auto;white-space:pre-wrap;font-family:monospace;font-size:12px;">{% for entry in logs.lines %}{{ entry.ts }} {{ entry.stream }} {{ entry.line }}
+{% empty %}{{ empty_text|default:_("No log lines yet. Logs appear after the app is running.") }}{% endfor %}</pre>{% endif %}

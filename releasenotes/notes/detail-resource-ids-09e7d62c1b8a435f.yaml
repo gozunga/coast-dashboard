@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    List tables for Stacks, App Groups, Environments, Apps, and Services omit
+    UUID columns. Parent names replace stack and app group IDs, including on
+    AJAX row updates and in the template catalog. Missing parent names display
+    as unavailable. Resource detail pages show the ID with a copy button.

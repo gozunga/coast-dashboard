@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Service pages live under ``/project/coast/services/<id>/`` for detail,
+    logs, console, deployments, env vars, domains and settings. Webhooks is
+    an app-only tab. Deployment times use the user timezone. Deployment
+    failure messages point to stack Activity where applicable; build logs
+    scrub engine helper image names. Env var Secret shows Yes or No.

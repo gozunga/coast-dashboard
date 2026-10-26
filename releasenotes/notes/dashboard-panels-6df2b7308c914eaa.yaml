@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Stack details show server roles and status. Apps and services have
+    deployment history, domains, Env vars and inline Logs tabs. Horizon
+    tables refresh transitional rows. Secret environment values are masked
+    as ``********`` before rendering. Public service responses omit
+    task_state; deployment history supplies build/deploy progress where
+    fetched. Runtime logs use repeated HTTP reads rather than streaming.

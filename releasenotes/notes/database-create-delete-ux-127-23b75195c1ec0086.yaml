@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Clarify Coast resource names and initial database connection settings during
+    database creation. Show the exact Coast or service name required to confirm
+    database deletion and backup overwrite, including validation feedback.

@@ -1,0 +1,4 @@
+{% load i18n %}
+<p>{% trans "Rules allow incoming traffic to workers. Required rules include web traffic and SSH from the App engine server." %}</p>
+<a href="{% url 'horizon:project:coast.stacks:add_ingress_rule' item.id %}" class="btn btn-primary ajax-modal">{% trans "Add rule" %}</a>
+{% include 'project/coast_stacks/_ingress_rules.html' with editable=True %}

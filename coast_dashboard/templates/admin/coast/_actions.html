@@ -1,0 +1,5 @@
+{% load i18n %}
+<div class="btn-group">
+  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{% trans "Actions" %} <span class="fa fa-caret-down"></span></button>
+  <ul class="dropdown-menu dropdown-menu-right"><li><a href="{{ request.path }}">{% trans "Refresh" %}</a></li></ul>
+</div>

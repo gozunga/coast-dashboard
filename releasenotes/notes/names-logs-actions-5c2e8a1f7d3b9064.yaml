@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Worker choices show ``<stack name> / <worker>``. Apps and Services
+    tables show app group and environment names. Logs shows the last 200
+    runtime lines with Refresh and auto-refresh every three seconds.
+    Deployments offer View Build Log and Cancel Deployment. Redeploy is
+    available before the first deployment and while idle; in-flight
+    deployment tasks block it. Batch failures show Coast API reasons.
+    The Ports field explains which port to enter.

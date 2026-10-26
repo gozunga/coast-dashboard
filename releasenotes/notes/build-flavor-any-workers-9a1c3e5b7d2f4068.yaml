@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Create Stack offers Nova flavors with a configured Coast VM plan for
+    each role: App engine server, worker and optional build server. It
+    preselects the first allowed flavor, sorted by RAM and name. Worker
+    count is at least one; choosing a build server flavor does not restrict
+    that count. Plan lookup uses Coast API 1.1. Stack creation uses 1.1
+    when a build server flavor is selected and 1.0 otherwise.

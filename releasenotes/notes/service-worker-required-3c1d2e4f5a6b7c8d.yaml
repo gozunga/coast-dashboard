@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    App and template service creation require an active worker in the
+    selected app group stack; Coast does not choose placement automatically.

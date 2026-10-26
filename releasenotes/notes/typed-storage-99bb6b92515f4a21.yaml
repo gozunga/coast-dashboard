@@ -1,0 +1,10 @@
+features:
+  - |
+    The app and service Storage tab has an explicit choice between a
+    bind mount (host folder) and a named volume. User mounts can be edited
+    and deleted; mounts from templates show their type and source and are
+    read-only in the dashboard. The tab is hidden until the API advertises
+    the typed storage microversion.
+    The dashboard uses the API 1.19 contract. Only managers and
+    administrators can delete mounts. Delete keeps the data, and storage
+    changes take effect on deployment.

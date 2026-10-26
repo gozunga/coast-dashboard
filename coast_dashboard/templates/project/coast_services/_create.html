@@ -1,0 +1,29 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block form_attrs %}enctype="multipart/form-data"{% endblock %}
+{% block modal-body-right %}
+  {% include "project/coast_services/_environment_filter.html" %}
+  {% include "project/coast_services/_health_check.html" %}
+  <h3>{% trans "Description" %}</h3>
+  <p>{{ form.help_text }}</p>
+{% endblock %}
+
+{% block modal-body %}
+  {{ block.super }}
+  {% if form.build_time %}
+  <div class="alert alert-warning coast-secret-build-warning" hidden>{% trans "Secret values passed to builds can appear in build output." %}</div>
+  <script>
+  (function () {
+    var script = document.currentScript;
+    var root = script.parentNode;
+    var secret = root.querySelector('[name="secret"]');
+    var build = root.querySelector('[name="build_time"]');
+    var warning = root.querySelector('.coast-secret-build-warning');
+    function update() { warning.hidden = !(secret.checked && build.checked); }
+    secret.addEventListener('change', update);
+    build.addEventListener('change', update);
+    update();
+  })();
+  </script>
+  {% endif %}
+{% endblock %}

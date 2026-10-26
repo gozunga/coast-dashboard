@@ -1,0 +1,94 @@
+{% extends 'horizon/common/_modal_form.html' %}
+{% load i18n %}
+{% block modal-body %}
+  {% if form.known_names %}
+  <p>{% trans "This app is already reachable at:" %} {{ form.known_names|join:", " }}</p>
+  {% endif %}
+  {% if form.edit_domain %}
+  <p>{% blocktrans with domain=form.edit_domain %}Change how {{ domain }} is set up.{% endblocktrans %}</p>
+  {% else %}<p>{% trans "Add another name for this app." %}</p>{% endif %}
+  <div class="coast-domain-form">
+  {% include 'horizon/common/_form_errors.html' with form=form %}
+  {% if form.replace_default %}<p>{% trans "After this domain is active you can make it the app's main address." %}</p>{% endif %}
+  {% for field in form.visible_fields %}
+    <div data-domain-section="{% if field.name == 'zone_id' or field.name == 'host' %}zone{% elif field.name == 'fqdn' %}manual{% endif %}">
+    {% if field.name == 'dns_mode' and form.edit_domain %}
+      <p>{{ field.label }}:</p>
+      {{ field.as_hidden }}
+      <p>{% if form.mode == 'zone' %}{% trans "Use a DNS zone in this project" %}{% else %}{% trans "Use my own domain" %}{% endif %}</p>
+    {% else %}{% include 'horizon/common/_form_field.html' with field=field %}{% endif %}
+    {% if field.name == 'host' or field.name == 'zone_id' %}<p class="coast-domain-hint text-muted">{{ field.help_text }}</p>{% endif %}
+    {% if field.name == 'fqdn' %}
+      <p>{% trans "Point an A record for" %} <span class="coast-manual-domain">{{ form.fqdn.value|default:_("this domain") }}</span> {% trans "to" %}
+      {% if form.worker_ip %}{{ form.worker_ip }}{% else %}{% trans "your worker's public IP (see the Overview tab)" %}{% endif %}{% trans ", then verify it on the Domains tab." %}
+      {% if form.worker_ip %}{% include 'project/coast_common/_copy_button.html' with copy_value=form.worker_ip %}{% endif %}</p>
+    {% endif %}
+    </div>
+    {% if field.name == 'host' %}
+      <div class="form-group" data-domain-section="zone">
+        <p>{% trans "Your app will be at:" %} <span class="coast-domain-preview"></span></p>
+        <p>{% trans "Coast creates the DNS record for you." %}</p>
+      </div>
+    {% endif %}
+  {% endfor %}
+  <p class="coast-domain-duplicate text-danger" hidden>{% trans "This app already uses that name" %}</p>
+  {{ form.existing_names|json_script:"coast-domain-names" }}
+  </div>
+  {% include "project/coast_common/_copy_script.html" %}
+  <script>
+  (function ($) {
+    function init() {
+      document.querySelectorAll('.coast-domain-form').forEach(function (root) {
+        if (root.dataset.initialized) { return; }
+        root.dataset.initialized = 'true';
+        var names = JSON.parse(root.querySelector('#coast-domain-names').textContent);
+        var mode = root.querySelector('[name="dns_mode"]');
+        var zone = root.querySelector('[name="zone_id"]');
+        var host = root.querySelector('[name="host"]');
+        var domain = root.querySelector('[name="fqdn"]');
+        var disabledControls = Array.from(root.querySelectorAll(
+          'input, select, textarea, button')).filter(function (control) {
+          return control.disabled;
+        });
+        function normalize(value) { return value.toLowerCase().replace(/\.+$/, ''); }
+        function update() {
+          var currentMode = mode ? mode.value : 'manual';
+          root.querySelectorAll('[data-domain-section]').forEach(function (section) {
+            var sectionMode = section.getAttribute('data-domain-section');
+            var active = !sectionMode || sectionMode === currentMode;
+            section.style.display = active ? '' : 'none';
+            section.querySelectorAll('input, select, textarea, button').forEach(function (control) {
+              control.disabled = !active || disabledControls.indexOf(control) !== -1;
+            });
+          });
+          var name = normalize(domain.value.trim());
+          root.querySelector('.coast-manual-domain').textContent = name || 'this domain';
+          if (mode && mode.value === 'zone') {
+            var suffix = zone.selectedIndex < 0 ? '' : normalize(zone.options[zone.selectedIndex].text);
+            var label = normalize(host.value.trim());
+            if (label === suffix) { label = ''; }
+            else if (label.endsWith('.' + suffix)) {
+              label = label.slice(0, -suffix.length - 1);
+            }
+            name = label ? label + '.' + suffix : suffix;
+            root.querySelector('.coast-domain-preview').textContent = name;
+          }
+          root.querySelector('.coast-domain-duplicate').hidden = names.indexOf(name) === -1;
+        }
+        root.addEventListener('input', update);
+        root.addEventListener('change', update);
+        update();
+      });
+    }
+    function register() {
+      if (!window.coastDomainInitRegistered && window.horizon && horizon.modals) {
+        horizon.modals.addModalInitFunction(init);
+        window.coastDomainInitRegistered = true;
+      }
+      init();
+    }
+    $(register);
+    if (window.horizon && horizon.modals) { register(); }
+  })(jQuery);
+  </script>
+{% endblock %}

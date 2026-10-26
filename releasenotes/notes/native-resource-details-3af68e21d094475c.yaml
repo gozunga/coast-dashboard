@@ -1,0 +1,16 @@
+---
+fixes:
+  - |
+    Edit Settings has the AJAX template and stable modal/form IDs required
+    by Horizon. Both modal links and normal page navigation open the existing
+    settings form. Settings saves return to Overview; pending changes show
+    a redeploy banner.
+features:
+  - |
+    Resource details use native Horizon tabs, resource names as page titles,
+    and header actions. App and service Overview tabs show resource fields.
+    Separate Deployments, Logs, Domains, and Env vars
+    tabs preserve deployment cancellation, runtime logs, and settings features.
+    Environment, App Group, and Stack details have scoped related-resource
+    tabs.
+    App and service actions include Start, Stop, and Restart with state checks.

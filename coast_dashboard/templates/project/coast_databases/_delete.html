@@ -1,0 +1,3 @@
+{% extends 'horizon/common/_modal_form.html' %}
+{% load i18n %}
+{% block modal-body-right %}<p class="alert alert-danger">{% trans "Deleting this database permanently removes its data and backups." %}</p><p>{% with name=form.item.name %}{% blocktrans %}To delete, type <strong>{{ name }}</strong> below.{% endblocktrans %}{% endwith %}</p>{% endblock %}

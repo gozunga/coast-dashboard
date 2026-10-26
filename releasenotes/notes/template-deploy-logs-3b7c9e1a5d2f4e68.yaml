@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    Deploying or redeploying a template service opens the service Logs
+    tab, which polls runtime logs. A template service deployment page shows
+    its status and times without a build log box. Built services keep
+    the build log.

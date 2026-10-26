@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Databases now offer start, stop and restart actions, runtime logs,
+    resource limits and IPv4 public access controls. Supported engines
+    include scheduled backups, downloads and restores into a new database.
+    Backups require a Swift-compatible object-storage endpoint on the cloud.
+    They are not verified end to end in 0.1.0; full verification is tracked
+    for 0.1.1 (gozunga/coast#124).

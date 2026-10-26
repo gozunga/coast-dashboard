@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Environment details list apps and services from a fresh API request on
+    each load, with detail links, kind, and status badges.
+fixes:
+  - |
+    Tables and detail pages use shared status badge colors. Stopped and
+    cancelled resources are gray, active and running resources are green,
+    pending operations are yellow, and failures are red. Cancelled resources
+    with a fault or error are red. Unknown states are gray.

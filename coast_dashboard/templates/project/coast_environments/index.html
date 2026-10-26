@@ -1,0 +1,6 @@
+{% extends 'project/coast_appgroups/filtered_list.html' %}
+{% load i18n %}
+{% block main %}
+<p>{% trans "Environments separate production, staging, and testing within an app group. Apps and services run in an environment on a worker in the app group stack." %}</p>
+{{ block.super }}
+{% endblock %}

@@ -1,0 +1,13 @@
+---
+features:
+  - |
+    Create App and Redeploy open the deployment page when Coast returns a
+    deployment ID. Template service creation and redeployment open Logs.
+    Overview shows a worker name linked to its stack and links to workload
+    addresses and domain management. The resource ID is the first field.
+    Create Service selects an app group, environment or worker only when
+    there is one compatible choice; users can change these fields.
+    Domains show DNS records and a Verify action where allowed. Add
+    Domain and Edit Domain offer Let's Encrypt or plain HTTP.
+    The settings banner requests redeploy only for pending changes. Name
+    and description changes show a saved message.

@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Stack introductions, creation descriptions, flavor labels, and server role
+    labels use engine-neutral wording. The control server is labeled
+    App engine server. Internal API role keys and driver names are unchanged.

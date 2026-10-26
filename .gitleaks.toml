@@ -1,0 +1,12 @@
+# Vendored xterm.js is minified. Names such as FourKeyMap match
+# generic-api-key. Allowlist only that directory.
+# https://github.com/gitleaks/gitleaks/blob/master/.gitleaks.toml
+title = "Coast dashboard"
+
+[extend]
+useDefault = true
+
+[allowlist]
+paths = [
+  '''coast_dashboard/static/coast_dashboard/vendor/xterm/''',
+]

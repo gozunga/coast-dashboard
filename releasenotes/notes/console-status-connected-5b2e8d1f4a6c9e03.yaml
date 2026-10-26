@@ -1,0 +1,7 @@
+---
+fixes:
+  - |
+    The Console tab shows "Connected." as soon as the shell is live. When
+    the session ends, the status
+    says so in red, the terminal is dimmed and stops taking input, and only
+    the Reconnect button is shown.

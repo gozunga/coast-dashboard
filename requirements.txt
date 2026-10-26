@@ -1,0 +1,4 @@
+pbr>=2.0.0
+keystoneauth1>=4.0.0
+# horizon and python-coastclient are installed by the deployment (Kolla
+# Horizon image / internal GitLab); neither is on PyPI at a usable pin here.

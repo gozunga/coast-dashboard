@@ -1,0 +1,9 @@
+fixes:
+  - |
+    Apps and services can redeploy before their first deployment and while
+    idle, including STOPPED resources with pending changes. The pending-change
+    banner and header actions use the same rule and block in-flight operations.
+    Details keep one header Edit Settings action and show the worker name
+    linked
+    to its stack. Template search submits a q query, resets pagination, and
+    filters the full catalog before applying the 50-row page limit.

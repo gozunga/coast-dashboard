@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Project panels use ``/project/coast/stacks/``,
+    ``/project/coast/appgroups/``, ``/project/coast/environments/``,
+    ``/project/coast/apps/`` and ``/project/coast/services/``. Their slugs
+    are ``coast.stacks``, ``coast.appgroups``, ``coast.environments``,
+    ``coast.apps`` and ``coast.services``.

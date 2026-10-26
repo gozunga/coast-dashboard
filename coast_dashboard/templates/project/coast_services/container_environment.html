@@ -1,0 +1,7 @@
+{% load i18n %}
+<h3>{% trans "Container environment" %}</h3>
+<p class="help-block">{% trans "Runtime environment values. Coast masks Secret-flagged values. Other values remain visible." %}</p>
+<dl class="dl-horizontal">
+{% for key, value in environment %}<dt>{{ key }}</dt><dd>{{ value }}</dd>
+{% empty %}<dd>{% trans "No environment variables." %}</dd>{% endfor %}
+</dl>

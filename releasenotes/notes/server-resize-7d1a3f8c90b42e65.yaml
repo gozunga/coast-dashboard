@@ -1,0 +1,9 @@
+---
+features:
+  - |
+    Project stack Servers tabs offer Resize for idle, ACTIVE VM workers,
+    build servers and the App engine server. The modal shows the current flavor
+    and only larger operator flavors allowed for the server role. Accepted
+    requests return to the Servers tab and use existing asynchronous row
+    polling.
+    Requires Coast API 1.27 for the customer flavor catalog and server sizes.

@@ -1,0 +1,11 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% block form_attrs %}data-coast-oneclick{% endblock %}
+{% block modal-body-right %}
+  {{ form.defaults|json_script }}
+  {% include "project/coast_services/_environment_filter.html" %}
+  {% include "project/coast_services/_health_check.html" %}
+  {% include "project/coast_oneclick/_name_defaults.html" %}
+  <h3>{% trans "Description" %}</h3>
+  <p>{{ form.help_text }}</p>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block main %}
+<p>{{ form.help_text }}</p>
+<form method="post">
+  {% csrf_token %}
+  {% include "horizon/common/_form_errors.html" %}
+  {% for field in form.visible_fields %}
+    {% include "horizon/common/_form_field.html" %}
+  {% endfor %}
+  <a class="btn btn-default" href="{{ cancel_url }}">{% trans "Cancel" %}</a>
+  <button type="submit" name="operation" value="save" class="btn btn-default">{% trans "Save" %}</button>
+  <button type="submit" name="operation" value="redeploy" class="btn btn-primary">{% trans "Save and redeploy" %}</button>
+</form>
+{% endblock %}

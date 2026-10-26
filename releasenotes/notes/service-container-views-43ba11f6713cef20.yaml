@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Compose service details include a Containers tab. Each container has
+    Overview, Logs and Environment tabs, with resource limits, health and
+    restart counts. Logs refresh every three seconds. Container reads use
+    Coast API microversion 1.13 and preserve its secret masking and fault
+    messages. Detail and log responses prevent browser caching.

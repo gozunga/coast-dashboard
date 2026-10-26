@@ -1,0 +1,83 @@
+{% load i18n coast_status %}
+<style>
+.coast-topo { display: flex; flex-wrap: wrap; gap: 20px; }
+.coast-topo-tree { flex: 3 1 480px; }
+.coast-topo-servers { flex: 1 1 260px; }
+.coast-topo ul.coast-tree { list-style: none; margin: 0; padding-left: 22px; position: relative; }
+.coast-topo ul.coast-tree.root { padding-left: 0; }
+.coast-topo ul.coast-tree li { position: relative; padding: 4px 0 4px 18px; }
+.coast-topo ul.coast-tree.root > li { padding-left: 0; }
+.coast-topo ul.coast-tree ul.coast-tree li::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; border-left: 1px solid #ccc; }
+.coast-topo ul.coast-tree ul.coast-tree li:last-child::before { bottom: auto; height: 16px; }
+.coast-topo ul.coast-tree ul.coast-tree li::after { content: ""; position: absolute; left: 0; top: 16px; width: 12px; border-top: 1px solid #ccc; }
+.coast-topo .coast-node { display: inline-block; padding: 3px 8px; border: 1px solid #ddd; border-radius: 3px; background: #fff; }
+.coast-topo .coast-node .fa { color: #777; margin-right: 4px; }
+.coast-topo .coast-node.stack { background: #f5f5f5; font-weight: 600; }
+.coast-topo .coast-kind { color: #777; font-size: 11px; text-transform: uppercase; margin-left: 4px; }
+.coast-topo .coast-on { color: #777; margin-left: 6px; font-size: 12px; }
+.coast-topo .coast-empty { color: #999; font-style: italic; }
+.coast-topo .label { margin-left: 4px; }
+</style>
+{% if not tree %}
+<p>{% trans "Unable to retrieve the topology." %}</p>
+{% else %}
+<div class="coast-topo">
+  <div class="coast-topo-tree">
+    <ul class="coast-tree root">
+      <li>
+        <span class="coast-node stack"><span class="fa fa-cubes"></span>{{ stack.name }} {{ stack|status_badge }}</span>
+        <ul class="coast-tree">
+        {% for group in tree.groups %}
+          <li>
+            <span class="coast-node"><span class="fa fa-folder"></span><a href="{% url 'horizon:project:coast.appgroups:detail' group.id %}">{{ group.name }}</a></span>
+            <ul class="coast-tree">
+            {% for env in group.environments %}
+              <li>
+                <span class="coast-node"><span class="fa fa-sitemap"></span><a href="{% url 'horizon:project:coast.environments:detail' env.id %}">{{ env.name }}</a></span>
+                <ul class="coast-tree">
+                {% for item in env.items %}
+                  <li>
+                    <span class="coast-node"><span class="fa {% if item.kind == 'service' %}fa-database{% else %}fa-cube{% endif %}"></span><a href="{% if item.kind == 'service' %}{% url 'horizon:project:coast.services:detail' item.id %}{% else %}{% url 'horizon:project:coast.apps:detail' item.id %}{% endif %}">{{ item.name }}</a><span class="coast-kind">{% if item.kind == 'service' %}{% trans "service" %}{% else %}{% trans "app" %}{% endif %}</span>{{ item|status_badge }}</span>
+                    {% if item.server %}<span class="coast-on">{% trans "on" %} <a href="{% url 'horizon:project:coast.stacks:detail' stack.id %}?tab=stack_details__servers">{{ item.server.name }}</a></span>{% endif %}
+                  </li>
+                {% empty %}
+                  <li><span class="coast-empty">{% trans "No apps or services" %}</span></li>
+                {% endfor %}
+                </ul>
+              </li>
+            {% empty %}
+              <li><span class="coast-empty">{% trans "No environments" %}</span></li>
+            {% endfor %}
+            </ul>
+          </li>
+        {% empty %}
+          <li><span class="coast-empty">{% trans "No app groups" %}</span></li>
+        {% endfor %}
+        {% for item in tree.orphans %}
+          <li><span class="coast-node"><span class="fa fa-cube"></span><a href="{% if item.kind == 'service' %}{% url 'horizon:project:coast.services:detail' item.id %}{% else %}{% url 'horizon:project:coast.apps:detail' item.id %}{% endif %}">{{ item.name }}</a>{{ item|status_badge }}</span></li>
+        {% endfor %}
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="coast-topo-servers">
+    <div class="panel panel-default">
+      <div class="panel-heading"><strong>{% trans "Servers" %}</strong></div>
+      <ul class="list-group">
+      {% for server in tree.servers %}
+        <li class="list-group-item">
+          <span class="fa fa-server" style="color:#777;margin-right:4px;"></span>
+          <a href="{% url 'horizon:project:coast.stacks:detail' stack.id %}?tab=stack_details__servers">{{ server.name }}</a>
+          {{ server|status_badge }}
+          <div class="help-block" style="margin:2px 0 0;">
+            {% if server.role == 'control' %}{% trans "App engine server" %}{% elif server.role == 'build' %}{% trans "Build server" %}{% else %}{% trans "Worker" %}{% endif %}{% if server.floating_ip %} · {{ server.floating_ip }} {% include "project/coast_common/_copy_button.html" with copy_value=server.floating_ip %}{% endif %}{% if server.role != 'control' %} · {% if not server.app_count and not server.service_count %}{% trans "No apps" %}{% else %}{% if server.app_count %}{% blocktrans count counter=server.app_count %}{{ counter }} app{% plural %}{{ counter }} apps{% endblocktrans %}{% endif %}{% if server.app_count and server.service_count %}, {% endif %}{% if server.service_count %}{% blocktrans count counter=server.service_count %}{{ counter }} service{% plural %}{{ counter }} services{% endblocktrans %}{% endif %}{% endif %}{% endif %}
+          </div>
+        </li>
+      {% empty %}
+        <li class="list-group-item coast-empty">{% trans "No servers" %}</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endif %}
